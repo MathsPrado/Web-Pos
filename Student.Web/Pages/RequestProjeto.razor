@@ -1,6 +1,7 @@
 ﻿@page "/RequestProjeto"
-
 @using Student.Web.Model
+@using Student.Web.Service
+@inject SolicitacaoProjectServer SolicitacaoProjectServer;
 
 <div class="container">
     <div class="row justify-content-center">
@@ -64,7 +65,7 @@
 
     //SolicitacaoProjeto solicitacaoProjeto = new SolicitacaoProjeto();
 
-    protected override void OnInitialized()
+    protected async override void OnInitialized()
     {
         var date = DateTime.Now;
         dateStart = date.AddDays(30);

@@ -1,6 +1,7 @@
 ﻿@page "/RequestDetalhe"
 @using Student.Web.Data
 @using Student.Web.Model
+@using Student.Web.Service
 @inject WeatherForecastService ForecastService
 
 
@@ -45,6 +46,6 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        forecasts = await ForecastService.GetForecastAsync(DateTime.Now);
+        var a = await SolicitacaoProjectServer.FindById(1);
     }
-        }
+}

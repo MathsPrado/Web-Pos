@@ -18,9 +18,19 @@ namespace Student.Web.Service
             this.httpClient = httpClient;
         }
 
-        public SolicitacaoProjeto Create(SolicitacaoProjeto value)
+        public async Task<string> Create(SolicitacaoProjeto value)
         {
-            throw new System.NotImplementedException();
+            try
+            {
+                HttpClient client = new HttpClient();
+                var a = await client.PostAsJsonAsync<SolicitacaoProjeto>(site + "/",value);
+                return a.StatusCode.ToString();
+                //var result = await httpClient.GetJsonAsync<SolicitacaoProjeto>("api/employees");
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
         }
 
         public SolicitacaoProjeto Delete(int id)

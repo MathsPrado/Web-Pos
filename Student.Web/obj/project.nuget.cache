@@ -1,10 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "PnHwQSiFN1npDKVSA+rP/ZEbljZgT5nAiDW2Gvg+tZkUPXYouN7RjxsNxeDZOi7nr1rTcf76nt7llJ3CEHUkgA==",
+  "dgSpecHash": "f80gsBSo7TkAdf73Xq2QI2IYErk4T99ZC4y6tvjt5qS92GbA6Ivj26XLo+JwZ4vZJOXtQTPHtfT6ZpXU+6JMHg==",
   "success": true,
-  "projectFilePath": "C:\\Users\\mathe\\Pictures\\.net\\Projects\\Student.Web\\Student.Web\\Student.Web.csproj",
+  "projectFilePath": "/Users/matheusmoraes/Documents/repos/Web-Pos/Student.Web/Student.Web.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\mathe\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\5.0.17\\microsoft.netcore.app.host.win-x64.5.0.17.nupkg.sha512"
+    "/Users/matheusmoraes/.nuget/packages/microsoft.aspnetcore.app.ref/5.0.0/microsoft.aspnetcore.app.ref.5.0.0.nupkg.sha512",
+    "/Users/matheusmoraes/.nuget/packages/microsoft.netcore.app.host.osx-x64/5.0.17/microsoft.netcore.app.host.osx-x64.5.0.17.nupkg.sha512",
+    "/Users/matheusmoraes/.nuget/packages/microsoft.netcore.app.ref/5.0.0/microsoft.netcore.app.ref.5.0.0.nupkg.sha512"
   ],
   "logs": []
 }

@@ -1,6 +1,9 @@
 ﻿@page "/RequestDetalhe/{Id:int}"
 @using Student.Web.Data
 @using Student.Web.Model
+@using Student.Web.Service
+@inject WeatherForecastService ForecastService
+@inject SolicitacaoProjectServer SolicitacaoProjectServer;
 
 <div class="container">
     <div class="card">
@@ -10,7 +13,7 @@
                     <h4>Detalhes do Projeto</h4>
                 </div>
                 <div class="d-flex flex-column ">
-                    <h6 class="text-end"> €50,00 - 100,00 EUR </h6>
+                    <h6 class="text-end"> @CurencyValue </h6>
                     <p class="text-end"><i class="bi bi-info-circle-fill"></i><small class="text-uppercase">O periodo para ofertar termina em @TimeEndProject</small></p>
                 </div>
             </div>
@@ -19,16 +22,7 @@
             <div>
                 <b>Detalhes</b>
                 <p>
-                    I would like from you to develop an awesome mobile application (in term of design) for my web radio that allows users to listen to live broadcasts and podcasts (available on the SoundCloud platform) on their mobile devices. The app will be available on both iOS and
-                    Android platforms (preferably to be implemented using Flutter).<br />
-
-                    User Interface The user interface of the application should be attractive, simple, clean, and easy to navigate. The color scheme and design should be
-                    consistent with the branding of the web radio station. The UI should include the following sections:<br />
-                    - Home screen: This should display the latest live broadcast and featured podcasts.<br />
-                    - Live screen: This should display the current live broadcast with playback controls.<br />
-                    - Podcasts screen: This should display a list of available podcasts (to retrieve data from SoundCloud) with playback controls.<br />
-
-
+                   @Description
                 </p>
             </div>
             <div>
@@ -36,13 +30,13 @@
                     Habilidades Necessárias
                 </b>
                 <div class="d-flex mb-3  mt-3 ">
-                    <span class="badge rounded-pill text-bg-light border p-2 me-3">PHP</span>
+                  
+                        @*foreach (string solicitocao in SkillList)
+                        {
+                           <span class="badge rounded-pill text-bg-light border p-2 me-3">@solicitocao</span>
+                        }*@
 
-                    <span class="badge rounded-pill text-bg-light border p-2">HTML5</span>
 
-                    <span class="badge rounded-pill text-bg-light border p-2">JAVASCRIPT</span>
-
-                    <span class="badge rounded-pill text-bg-light border p-2">CSS</span>
                 </div>
                 <div class="d-flex justify-content-between">
                     <small>ID do Projeto: @Id</small>
@@ -66,7 +60,7 @@
             <div>
                 <p>Você poderá editar sua oferta até que o projeto seja concedido a alguém.</p>
                 <form>
-                   
+
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <div class="mb-3">
@@ -79,7 +73,7 @@
                                 <div class="form-text">Example help text goes outside the input group.</div>
                             </div>
                         </div>
-                          
+
                         <div class="form-group col-md-6">
                             <div class="mb-3">
                                 <label for="basic-url" class="form-label fw-bold">Valor da Oferta</label>
@@ -101,7 +95,7 @@
                         <button type="submit" class="btn btn-primary">Enviar</button>
                     </div>
                 </form>
-            </div>   
+            </div>
         </div>
     </div>
 </div>
@@ -112,18 +106,39 @@
     public int Id { get; set; }
 
     public string TimeEndProject { get; set; }
+    public string Description { get; set; }
+    public List<string>? SkillList { get; set; }
+    public string CurencyValue { get; set; }
 
-    protected override void OnInitialized()
+    private SolicitacaoProjeto solicitacaoProjeto;
+
+    protected override async Task OnInitializedAsync()
     {
-        string dataInit = "2023-03-12T12:35:16.379";
+        solicitacaoProjeto = await SolicitacaoProjectServer.FindById(Id);
 
-        string dataEnd = "2023-03-12T12:35:16.379";
+        string dataInit = solicitacaoProjeto.DataInicio.ToString();
+
+        string dataEnd = solicitacaoProjeto.DataFim.ToString();
+
+        foreach (string item in solicitacaoProjeto.ListaConhecimentos)
+        {
+            SkillList.Add(item);
+        }
+
+        int Value = int.Parse(solicitacaoProjeto.Orçamento);
+
+        string newValue = (Value / 100m).ToString("C2");
+
+        CurencyValue = newValue;
 
         TimeSpan date = Convert.ToDateTime(dataEnd) - Convert.ToDateTime(dataInit);
 
         int totalDias = date.Days;
+
         TimeEndProject = String.Format("{0} dias, {1} horas",
                          date.Hours, date.Days);
+
+        Description = solicitacaoProjeto.Descricao;
     }
 
 }

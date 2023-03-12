@@ -13,92 +13,99 @@ namespace Student.Web.Pages
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Components;
 #nullable restore
-#line 1 "C:\Users\mathe\Pictures\.net\Projects\Student.Web\Student.Web\_Imports.razor"
+#line 1 "/Users/matheusmoraes/Documents/repos/Web-Pos/Student.Web/_Imports.razor"
 using System.Net.Http;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
-#line 2 "C:\Users\mathe\Pictures\.net\Projects\Student.Web\Student.Web\_Imports.razor"
+#line 2 "/Users/matheusmoraes/Documents/repos/Web-Pos/Student.Web/_Imports.razor"
 using Microsoft.AspNetCore.Authorization;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
-#line 3 "C:\Users\mathe\Pictures\.net\Projects\Student.Web\Student.Web\_Imports.razor"
+#line 3 "/Users/matheusmoraes/Documents/repos/Web-Pos/Student.Web/_Imports.razor"
 using Microsoft.AspNetCore.Components.Authorization;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
-#line 4 "C:\Users\mathe\Pictures\.net\Projects\Student.Web\Student.Web\_Imports.razor"
+#line 4 "/Users/matheusmoraes/Documents/repos/Web-Pos/Student.Web/_Imports.razor"
 using Microsoft.AspNetCore.Components.Forms;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
-#line 5 "C:\Users\mathe\Pictures\.net\Projects\Student.Web\Student.Web\_Imports.razor"
+#line 5 "/Users/matheusmoraes/Documents/repos/Web-Pos/Student.Web/_Imports.razor"
 using Microsoft.AspNetCore.Components.Routing;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
-#line 6 "C:\Users\mathe\Pictures\.net\Projects\Student.Web\Student.Web\_Imports.razor"
+#line 6 "/Users/matheusmoraes/Documents/repos/Web-Pos/Student.Web/_Imports.razor"
 using Microsoft.AspNetCore.Components.Web;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
-#line 7 "C:\Users\mathe\Pictures\.net\Projects\Student.Web\Student.Web\_Imports.razor"
+#line 7 "/Users/matheusmoraes/Documents/repos/Web-Pos/Student.Web/_Imports.razor"
 using Microsoft.AspNetCore.Components.Web.Virtualization;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
-#line 8 "C:\Users\mathe\Pictures\.net\Projects\Student.Web\Student.Web\_Imports.razor"
+#line 8 "/Users/matheusmoraes/Documents/repos/Web-Pos/Student.Web/_Imports.razor"
 using Microsoft.JSInterop;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
-#line 9 "C:\Users\mathe\Pictures\.net\Projects\Student.Web\Student.Web\_Imports.razor"
+#line 9 "/Users/matheusmoraes/Documents/repos/Web-Pos/Student.Web/_Imports.razor"
 using Student.Web;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
-#line 10 "C:\Users\mathe\Pictures\.net\Projects\Student.Web\Student.Web\_Imports.razor"
+#line 10 "/Users/matheusmoraes/Documents/repos/Web-Pos/Student.Web/_Imports.razor"
 using Student.Web.Shared;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
-#line 3 "C:\Users\mathe\Pictures\.net\Projects\Student.Web\Student.Web\Pages\RequestProjeto.razor"
+#line 2 "/Users/matheusmoraes/Documents/repos/Web-Pos/Student.Web/Pages/RequestProjeto.razor"
 using Student.Web.Model;
 
 #line default
 #line hidden
 #nullable disable
-    [Microsoft.AspNetCore.Components.RouteAttribute("/RequestProjeto")]
-    public partial class RequestProjeto : Microsoft.AspNetCore.Components.ComponentBase
+#nullable restore
+#line 3 "/Users/matheusmoraes/Documents/repos/Web-Pos/Student.Web/Pages/RequestProjeto.razor"
+using Student.Web.Service;
+
+#line default
+#line hidden
+#nullable disable
+    [global::Microsoft.AspNetCore.Components.RouteAttribute("/RequestProjeto")]
+    public partial class RequestProjeto : global::Microsoft.AspNetCore.Components.ComponentBase
     {
         #pragma warning disable 1998
-        protected override void BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder)
+        protected override void BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder)
         {
         }
         #pragma warning restore 1998
 #nullable restore
-#line 56 "C:\Users\mathe\Pictures\.net\Projects\Student.Web\Student.Web\Pages\RequestProjeto.razor"
+#line 57 "/Users/matheusmoraes/Documents/repos/Web-Pos/Student.Web/Pages/RequestProjeto.razor"
        
     SolicitacaoProjeto solicitacaoProjeto = new SolicitacaoProjeto();
 
@@ -110,7 +117,7 @@ using Student.Web.Model;
 
     //SolicitacaoProjeto solicitacaoProjeto = new SolicitacaoProjeto();
 
-    protected override void OnInitialized()
+    protected async override void OnInitialized()
     {
         var date = DateTime.Now;
         dateStart = date.AddDays(30);
@@ -118,16 +125,38 @@ using Student.Web.Model;
         HandleHeset();
     }
 
-    private void Salvar()
+    //private async void Salvar()
+    //{
+
+    //}
+
+    private async void HandleValidSubmit()
     {
-        solicitacaoProjeto = new SolicitacaoProjeto();
+        if(solicitacaoProjeto.Descricao == "" || solicitacaoProjeto.Orçamento == "" || solicitacaoProjeto.Local == "" || solicitacaoProjeto.Titulo == "")
+        {
+            await JsRuntime.InvokeVoidAsync("alert", "Preencher todos os campos"); // Alert
+            return;
+        }
         editContext = new EditContext(solicitacaoProjeto);
+        var result = await solicitacaoProjectServer.Create(solicitacaoProjeto);
+        if(result == "OK")
+            await JsRuntime.InvokeVoidAsync("alert", "Salvo com sucesso!"); // Alert
+        else
+            await JsRuntime.InvokeVoidAsync("alert", "Erro:"+result); // Alert
+
+        resetValues();
+        // Process the valid form
     }
 
-    private void HandleValidSubmit()
+    private void resetValues()
     {
-        var a = 111;
-        // Process the valid form
+        var date = DateTime.Now;
+        dateStart = date.AddDays(30);
+        dateEnd = date.AddDays(30);
+        solicitacaoProjeto.Descricao = "";
+        solicitacaoProjeto.Orçamento = "";
+        solicitacaoProjeto.Local = "";
+        solicitacaoProjeto.Titulo = "";
     }
 
     private void HandleHeset()
@@ -138,6 +167,8 @@ using Student.Web.Model;
 #line default
 #line hidden
 #nullable disable
+        [global::Microsoft.AspNetCore.Components.InjectAttribute] private IJSRuntime JsRuntime { get; set; }
+        [global::Microsoft.AspNetCore.Components.InjectAttribute] private SolicitacaoProjectServer solicitacaoProjectServer { get; set; }
     }
 }
 #pragma warning restore 1591

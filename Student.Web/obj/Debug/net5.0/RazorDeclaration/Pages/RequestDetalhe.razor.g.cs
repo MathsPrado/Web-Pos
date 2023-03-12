@@ -13,111 +13,139 @@ namespace Student.Web.Pages
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Components;
 #nullable restore
-#line 1 "C:\Users\mathe\Pictures\.net\Projects\Student.Web\Student.Web\_Imports.razor"
+#line 1 "/Users/matheusmoraes/Documents/repos/Web-Pos/Student.Web/_Imports.razor"
 using System.Net.Http;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
-#line 2 "C:\Users\mathe\Pictures\.net\Projects\Student.Web\Student.Web\_Imports.razor"
+#line 2 "/Users/matheusmoraes/Documents/repos/Web-Pos/Student.Web/_Imports.razor"
 using Microsoft.AspNetCore.Authorization;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
-#line 3 "C:\Users\mathe\Pictures\.net\Projects\Student.Web\Student.Web\_Imports.razor"
+#line 3 "/Users/matheusmoraes/Documents/repos/Web-Pos/Student.Web/_Imports.razor"
 using Microsoft.AspNetCore.Components.Authorization;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
-#line 4 "C:\Users\mathe\Pictures\.net\Projects\Student.Web\Student.Web\_Imports.razor"
+#line 4 "/Users/matheusmoraes/Documents/repos/Web-Pos/Student.Web/_Imports.razor"
 using Microsoft.AspNetCore.Components.Forms;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
-#line 5 "C:\Users\mathe\Pictures\.net\Projects\Student.Web\Student.Web\_Imports.razor"
+#line 5 "/Users/matheusmoraes/Documents/repos/Web-Pos/Student.Web/_Imports.razor"
 using Microsoft.AspNetCore.Components.Routing;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
-#line 6 "C:\Users\mathe\Pictures\.net\Projects\Student.Web\Student.Web\_Imports.razor"
+#line 6 "/Users/matheusmoraes/Documents/repos/Web-Pos/Student.Web/_Imports.razor"
 using Microsoft.AspNetCore.Components.Web;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
-#line 7 "C:\Users\mathe\Pictures\.net\Projects\Student.Web\Student.Web\_Imports.razor"
+#line 7 "/Users/matheusmoraes/Documents/repos/Web-Pos/Student.Web/_Imports.razor"
 using Microsoft.AspNetCore.Components.Web.Virtualization;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
-#line 8 "C:\Users\mathe\Pictures\.net\Projects\Student.Web\Student.Web\_Imports.razor"
+#line 8 "/Users/matheusmoraes/Documents/repos/Web-Pos/Student.Web/_Imports.razor"
 using Microsoft.JSInterop;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
-#line 9 "C:\Users\mathe\Pictures\.net\Projects\Student.Web\Student.Web\_Imports.razor"
+#line 9 "/Users/matheusmoraes/Documents/repos/Web-Pos/Student.Web/_Imports.razor"
 using Student.Web;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
-#line 10 "C:\Users\mathe\Pictures\.net\Projects\Student.Web\Student.Web\_Imports.razor"
+#line 10 "/Users/matheusmoraes/Documents/repos/Web-Pos/Student.Web/_Imports.razor"
 using Student.Web.Shared;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
-#line 2 "C:\Users\mathe\Pictures\.net\Projects\Student.Web\Student.Web\Pages\RequestDetalhe.razor"
+#line 2 "/Users/matheusmoraes/Documents/repos/Web-Pos/Student.Web/Pages/RequestDetalhe.razor"
 using Student.Web.Data;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
-#line 3 "C:\Users\mathe\Pictures\.net\Projects\Student.Web\Student.Web\Pages\RequestDetalhe.razor"
+#line 3 "/Users/matheusmoraes/Documents/repos/Web-Pos/Student.Web/Pages/RequestDetalhe.razor"
 using Student.Web.Model;
 
 #line default
 #line hidden
 #nullable disable
-    [Microsoft.AspNetCore.Components.RouteAttribute("/RequestDetalhe")]
-    public partial class RequestDetalhe : Microsoft.AspNetCore.Components.ComponentBase
-    {
-        #pragma warning disable 1998
-        protected override void BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder)
-        {
-        }
-        #pragma warning restore 1998
 #nullable restore
-#line 43 "C:\Users\mathe\Pictures\.net\Projects\Student.Web\Student.Web\Pages\RequestDetalhe.razor"
-       
-    private WeatherForecast[] forecasts;
-
-    protected override async Task OnInitializedAsync()
-    {
-        forecasts = await ForecastService.GetForecastAsync(DateTime.Now);
-    }
-        
+#line 4 "/Users/matheusmoraes/Documents/repos/Web-Pos/Student.Web/Pages/RequestDetalhe.razor"
+using Student.Web.Service;
 
 #line default
 #line hidden
 #nullable disable
+    [global::Microsoft.AspNetCore.Components.RouteAttribute("/RequestDetalhe/{Id:int}")]
+    public partial class RequestDetalhe : global::Microsoft.AspNetCore.Components.ComponentBase
+    {
+        #pragma warning disable 1998
+        protected override void BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder)
+        {
+        }
+        #pragma warning restore 1998
+#nullable restore
+#line 100 "/Users/matheusmoraes/Documents/repos/Web-Pos/Student.Web/Pages/RequestDetalhe.razor"
+       
+
+    [Parameter]
+    public int Id { get; set; }
+
+    public string TimeEndProject { get; set; }
+    public string Description { get; set; }
+
+    private SolicitacaoProjeto solicitacaoProjeto;
+
+    protected override async Task OnInitializedAsync()
+    {
+        solicitacaoProjeto = await SolicitacaoProjectServer.FindById(Id);
+
+        string dataInit = solicitacaoProjeto.DataInicio.ToString();
+
+        string dataEnd = solicitacaoProjeto.DataFim.ToString();
+
+        TimeSpan date = Convert.ToDateTime(dataEnd) - Convert.ToDateTime(dataInit);
+
+        int totalDias = date.Days;
+
+        TimeEndProject = String.Format("{0} dias, {1} horas",
+                         date.Hours, date.Days);
+
+        Description = solicitacaoProjeto.Descricao;
+    }
+
+
+#line default
+#line hidden
+#nullable disable
+        [global::Microsoft.AspNetCore.Components.InjectAttribute] private SolicitacaoProjectServer SolicitacaoProjectServer { get; set; }
         [global::Microsoft.AspNetCore.Components.InjectAttribute] private WeatherForecastService ForecastService { get; set; }
     }
 }

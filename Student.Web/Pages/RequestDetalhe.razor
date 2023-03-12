@@ -1,0 +1,50 @@
+﻿@page "/RequestDetalhe"
+@using Student.Web.Data
+@using Student.Web.Model
+@inject WeatherForecastService ForecastService
+
+
+@if (forecasts == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="container">
+        <h2>Detalhes do projeto</h2>
+        <div class="panel-group">
+        </div>
+    </div>
+    <table class="table">
+        <thead>
+            <tr style="background-color: #38598b; color:white">
+                <th>Projeto</th>
+                <th>Valor</th>
+                <th>Orçamento</th>
+                <th>Localização</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var forecast in forecasts)
+            {
+                <tr>
+                    <td>@forecast.Date.ToShortDateString()</td>
+                    <td>@forecast.TemperatureC</td>
+                    <td>@forecast.TemperatureF</td>
+                    <td>@forecast.Summary</td>
+                    <td> <button type="submit" class="btn btn-primary">Abrir</button></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private WeatherForecast[] forecasts;
+
+    protected override async Task OnInitializedAsync()
+    {
+        forecasts = await ForecastService.GetForecastAsync(DateTime.Now);
+    }
+        }

@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "PnHwQSiFN1npDKVSA+rP/ZEbljZgT5nAiDW2Gvg+tZkUPXYouN7RjxsNxeDZOi7nr1rTcf76nt7llJ3CEHUkgA==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\mathe\\Pictures\\.net\\Projects\\Student.Web\\Student.Web\\Student.Web.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\mathe\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\5.0.17\\microsoft.netcore.app.host.win-x64.5.0.17.nupkg.sha512"
+  ],
+  "logs": []
+}

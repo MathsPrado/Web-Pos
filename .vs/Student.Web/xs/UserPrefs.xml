@@ -1,0 +1,46 @@
+﻿<Properties StartupConfiguration="{6E66F5A3-A5BB-4A52-A11D-586A67E2F510}|Default">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.ItemProperties.Student.Web PreferredExecutionTarget="/System/Volumes/Preboot/Cryptexes/App/System/Applications/Safari.app" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Student.Web/Pages/ViewDetalhe.razor">
+    <Files>
+      <File FileName="Student.Web/Model/SolicitacaoProjeto.cs" />
+      <File FileName="Student.Web/Pages/RequestDetalhe.razor" Line="43" Column="8" />
+      <File FileName="Student.Web/Startup.cs" />
+      <File FileName="Student.Web/Pages/Index.razor" />
+      <File FileName="Student.Web/Pages/RequestProjeto.razor" Line="1" Column="23" />
+      <File FileName="Student.Web/Pages/_Host.cshtml" />
+      <File FileName="Student.Web/Pages/Error.cshtml" />
+      <File FileName="Student.Web/Properties/launchSettings.json" Line="21" Column="1" />
+      <File FileName="Student.Web/appsettings.json" Line="9" Column="27" />
+      <File FileName="Student.Web/Program.cs" Line="1" Column="1" />
+      <File FileName="Student.Web/Shared/MainLayout.razor" Line="1" Column="1" />
+      <File FileName="Student.Web/Shared/NavMenu.razor" Line="1" Column="1" />
+      <File FileName="Student.Web/Shared/SurveyPrompt.razor" Line="1" Column="1" />
+      <File FileName="Student.Web/Pages/ViewDetalhe.razor" Line="16" Column="13" />
+      <File FileName="Student.Web/Data/WeatherForecastService.cs" Line="13" Column="1" />
+      <File FileName="Student.Web/Data/WeatherForecast.cs" Line="8" Column="1" />
+      <File FileName="Student.Web/App.razor" Line="1" Column="1" />
+      <File FileName="Student.Web/_Imports.razor" Line="1" Column="1" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="Student.Web" expanded="True">
+            <Node name="Student.Web" expanded="True">
+              <Node name="Data" expanded="True" />
+              <Node name="Model" expanded="True" />
+              <Node name="Pages" expanded="True" />
+              <Node name="Properties" expanded="True" />
+              <Node name="Shared" expanded="True" />
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MultiItemStartupConfigurations />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+</Properties>

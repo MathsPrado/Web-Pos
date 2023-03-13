@@ -1,0 +1,61 @@
+﻿@page "/login"
+@layout LoginLayout
+@using Student.Web.Model
+@using Student.Web.Service
+@inject NavigationManager NavigationManager
+@inject UserService userService
+
+<br />
+<br />
+<div class="d-flex justify-content-center align-items-end">
+    <div class="card" style="width:340px; height: 400px;">
+        <div class="card-body">
+            <EditForm Model="@user" OnValidSubmit="@ValidateUser">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+                <div class="text-center m-4">
+                    <a class="navbar-brand" href="">Student.Web</a>
+                </div>
+                <div class="form-floating mb-4">
+                    <label for="floatingInput">Email</label>
+                    <input type="email" class="form-control" id="floatingInput" @bind-value="user.email" placeholder="name@example.com">
+                </div>
+                <div class="form-floating mb-4">
+                    <label for="floatingPassword">Password</label>
+                    <input type="password" class="form-control" id="floatingPassword" @bind-value="user.password" placeholder="senha">
+                </div>
+
+                <div class="mt-4 mb-4">
+                    <button class="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
+                </div>
+                <div class="col-12 row" style="text-align:left; font-weight:bold">
+                    <span class="col-12">@LoginMesssage</span>
+                </div>
+            </EditForm>
+        </div>
+    </div>
+</div>
+
+
+@code {
+    private User user = new User();
+    public string LoginMesssage { get; set; }
+
+    private async Task<bool> ValidateUser()
+    {
+
+        var returnedUser = await userService.LoginAsync(user);
+
+        if (returnedUser == true)
+        {
+
+            NavigationManager.NavigateTo("/");
+        }
+        else
+        {
+            LoginMesssage = "Email ou senha invalido.";
+        }
+
+        return await Task.FromResult(true);
+    }
+}

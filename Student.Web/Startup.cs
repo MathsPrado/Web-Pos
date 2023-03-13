@@ -30,6 +30,8 @@ namespace Student.Web
             services.AddServerSideBlazor();
             services.AddSingleton<WeatherForecastService>();
             services.AddSingleton<SolicitacaoProjectServer>();
+            services.AddSingleton<PropostaSolicitacaoProjetoServer>();
+            services.AddSingleton<UserService>();
             services.AddHttpClient();
         }
 

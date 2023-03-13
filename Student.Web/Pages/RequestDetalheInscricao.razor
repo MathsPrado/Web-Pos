@@ -1,0 +1,46 @@
+﻿@page "/RequestDetalheInscricao"
+@using Student.Web.Data
+@using Student.Web.Model
+@using Student.Web.Service
+@inject WeatherForecastService ForecastService
+@inject PropostaSolicitacaoProjetoServer propostaSolicitacaoProjetoServer;
+<h1>Inscrições em projetos</h1>
+
+
+@if (propostaSolicitacaoProjeto == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr style="background-color: #38598b; color:white">
+                <th>Projeto</th>
+                <th>Orçamento</th>
+                <th>Tempo De Entrega</th>
+                <th>Usuário</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var solicitacaoProjeto in propostaSolicitacaoProjeto)
+            {
+                <tr>
+                    <td>@solicitacaoProjeto.Id</td>
+                    <td>@solicitacaoProjeto.Orçamento</td>
+                    <td>@solicitacaoProjeto.TempoEntrega/Dias</td>
+                    <td>@solicitacaoProjeto.IdUsuario</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private IEnumerable<PropostaSolicitacaoProjeto> propostaSolicitacaoProjeto;
+
+    protected override async Task OnInitializedAsync()
+    {
+        propostaSolicitacaoProjeto = await propostaSolicitacaoProjetoServer.GetAll();
+    }
+}

@@ -1,30 +1,3 @@
-C:/Users/mathe/Desktop/Nova pasta/Nova pasta/Web-Pos/Student.Web/bin/Debug/net6.0/appsettings.Development.json
-C:/Users/mathe/Desktop/Nova pasta/Nova pasta/Web-Pos/Student.Web/bin/Debug/net6.0/appsettings.json
-C:/Users/mathe/Desktop/Nova pasta/Nova pasta/Web-Pos/Student.Web/bin/Debug/net6.0/Student.Web.staticwebassets.runtime.json
-C:/Users/mathe/Desktop/Nova pasta/Nova pasta/Web-Pos/Student.Web/bin/Debug/net6.0/Student.Web.exe
-C:/Users/mathe/Desktop/Nova pasta/Nova pasta/Web-Pos/Student.Web/bin/Debug/net6.0/Student.Web.deps.json
-C:/Users/mathe/Desktop/Nova pasta/Nova pasta/Web-Pos/Student.Web/bin/Debug/net6.0/Student.Web.runtimeconfig.json
-C:/Users/mathe/Desktop/Nova pasta/Nova pasta/Web-Pos/Student.Web/bin/Debug/net6.0/Student.Web.dll
-C:/Users/mathe/Desktop/Nova pasta/Nova pasta/Web-Pos/Student.Web/bin/Debug/net6.0/ref/Student.Web.dll
-C:/Users/mathe/Desktop/Nova pasta/Nova pasta/Web-Pos/Student.Web/bin/Debug/net6.0/Student.Web.pdb
-C:/Users/mathe/Desktop/Nova pasta/Nova pasta/Web-Pos/Student.Web/obj/Debug/net6.0/Student.Web.csproj.AssemblyReference.cache
-C:/Users/mathe/Desktop/Nova pasta/Nova pasta/Web-Pos/Student.Web/obj/Debug/net6.0/Student.Web.GeneratedMSBuildEditorConfig.editorconfig
-C:/Users/mathe/Desktop/Nova pasta/Nova pasta/Web-Pos/Student.Web/obj/Debug/net6.0/Student.Web.AssemblyInfoInputs.cache
-C:/Users/mathe/Desktop/Nova pasta/Nova pasta/Web-Pos/Student.Web/obj/Debug/net6.0/Student.Web.AssemblyInfo.cs
-C:/Users/mathe/Desktop/Nova pasta/Nova pasta/Web-Pos/Student.Web/obj/Debug/net6.0/Student.Web.csproj.CoreCompileInputs.cache
-C:/Users/mathe/Desktop/Nova pasta/Nova pasta/Web-Pos/Student.Web/obj/Debug/net6.0/Student.Web.MvcApplicationPartsAssemblyInfo.cache
-C:/Users/mathe/Desktop/Nova pasta/Nova pasta/Web-Pos/Student.Web/obj/Debug/net6.0/Student.Web.RazorAssemblyInfo.cache
-C:/Users/mathe/Desktop/Nova pasta/Nova pasta/Web-Pos/Student.Web/obj/Debug/net6.0/Student.Web.RazorAssemblyInfo.cs
-C:/Users/mathe/Desktop/Nova pasta/Nova pasta/Web-Pos/Student.Web/obj/Debug/net6.0/staticwebassets.build.json
-C:/Users/mathe/Desktop/Nova pasta/Nova pasta/Web-Pos/Student.Web/obj/Debug/net6.0/staticwebassets.development.json
-C:/Users/mathe/Desktop/Nova pasta/Nova pasta/Web-Pos/Student.Web/obj/Debug/net6.0/scopedcss/Shared/MainLayout.razor.rz.scp.css
-C:/Users/mathe/Desktop/Nova pasta/Nova pasta/Web-Pos/Student.Web/obj/Debug/net6.0/scopedcss/Shared/NavMenu.razor.rz.scp.css
-C:/Users/mathe/Desktop/Nova pasta/Nova pasta/Web-Pos/Student.Web/obj/Debug/net6.0/scopedcss/bundle/Student.Web.styles.css
-C:/Users/mathe/Desktop/Nova pasta/Nova pasta/Web-Pos/Student.Web/obj/Debug/net6.0/scopedcss/projectbundle/Student.Web.bundle.scp.css
-C:/Users/mathe/Desktop/Nova pasta/Nova pasta/Web-Pos/Student.Web/obj/Debug/net6.0/Student.Web.dll
-C:/Users/mathe/Desktop/Nova pasta/Nova pasta/Web-Pos/Student.Web/obj/Debug/net6.0/ref/Student.Web.dll
-C:/Users/mathe/Desktop/Nova pasta/Nova pasta/Web-Pos/Student.Web/obj/Debug/net6.0/Student.Web.pdb
-C:/Users/mathe/Desktop/Nova pasta/Nova pasta/Web-Pos/Student.Web/obj/Debug/net6.0/Student.Web.genruntimeconfig.cache
 /Users/matheusmoraes/Documents/repos/Web-Pos/Student.Web/bin/Debug/net6.0/appsettings.Development.json
 /Users/matheusmoraes/Documents/repos/Web-Pos/Student.Web/bin/Debug/net6.0/appsettings.json
 /Users/matheusmoraes/Documents/repos/Web-Pos/Student.Web/bin/Debug/net6.0/Student.Web.staticwebassets.runtime.json
@@ -57,3 +30,30 @@ C:/Users/mathe/Desktop/Nova pasta/Nova pasta/Web-Pos/Student.Web/obj/Debug/net6.
 /Users/matheusmoraes/Documents/repos/Web-Pos/Student.Web/obj/Debug/net6.0/Student.Web.pdb
 /Users/matheusmoraes/Documents/repos/Web-Pos/Student.Web/obj/Debug/net6.0/Student.Web.genruntimeconfig.cache
 /Users/matheusmoraes/Documents/repos/Web-Pos/Student.Web/obj/Debug/net6.0/ref/Student.Web.dll
+C:\Users\mathe\Desktop\Nova pasta\Nova pasta\Web-Pos\Student.Web\bin\Debug\net6.0\appsettings.Development.json
+C:\Users\mathe\Desktop\Nova pasta\Nova pasta\Web-Pos\Student.Web\bin\Debug\net6.0\appsettings.json
+C:\Users\mathe\Desktop\Nova pasta\Nova pasta\Web-Pos\Student.Web\bin\Debug\net6.0\Student.Web.staticwebassets.runtime.json
+C:\Users\mathe\Desktop\Nova pasta\Nova pasta\Web-Pos\Student.Web\bin\Debug\net6.0\Student.Web.exe
+C:\Users\mathe\Desktop\Nova pasta\Nova pasta\Web-Pos\Student.Web\bin\Debug\net6.0\Student.Web.deps.json
+C:\Users\mathe\Desktop\Nova pasta\Nova pasta\Web-Pos\Student.Web\bin\Debug\net6.0\Student.Web.runtimeconfig.json
+C:\Users\mathe\Desktop\Nova pasta\Nova pasta\Web-Pos\Student.Web\bin\Debug\net6.0\Student.Web.dll
+C:\Users\mathe\Desktop\Nova pasta\Nova pasta\Web-Pos\Student.Web\bin\Debug\net6.0\ref\Student.Web.dll
+C:\Users\mathe\Desktop\Nova pasta\Nova pasta\Web-Pos\Student.Web\bin\Debug\net6.0\Student.Web.pdb
+C:\Users\mathe\Desktop\Nova pasta\Nova pasta\Web-Pos\Student.Web\obj\Debug\net6.0\Student.Web.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\mathe\Desktop\Nova pasta\Nova pasta\Web-Pos\Student.Web\obj\Debug\net6.0\Student.Web.AssemblyInfoInputs.cache
+C:\Users\mathe\Desktop\Nova pasta\Nova pasta\Web-Pos\Student.Web\obj\Debug\net6.0\Student.Web.AssemblyInfo.cs
+C:\Users\mathe\Desktop\Nova pasta\Nova pasta\Web-Pos\Student.Web\obj\Debug\net6.0\Student.Web.csproj.CoreCompileInputs.cache
+C:\Users\mathe\Desktop\Nova pasta\Nova pasta\Web-Pos\Student.Web\obj\Debug\net6.0\Student.Web.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\mathe\Desktop\Nova pasta\Nova pasta\Web-Pos\Student.Web\obj\Debug\net6.0\Student.Web.RazorAssemblyInfo.cache
+C:\Users\mathe\Desktop\Nova pasta\Nova pasta\Web-Pos\Student.Web\obj\Debug\net6.0\Student.Web.RazorAssemblyInfo.cs
+C:\Users\mathe\Desktop\Nova pasta\Nova pasta\Web-Pos\Student.Web\obj\Debug\net6.0\staticwebassets.build.json
+C:\Users\mathe\Desktop\Nova pasta\Nova pasta\Web-Pos\Student.Web\obj\Debug\net6.0\staticwebassets.development.json
+C:\Users\mathe\Desktop\Nova pasta\Nova pasta\Web-Pos\Student.Web\obj\Debug\net6.0\scopedcss\Shared\MainLayout.razor.rz.scp.css
+C:\Users\mathe\Desktop\Nova pasta\Nova pasta\Web-Pos\Student.Web\obj\Debug\net6.0\scopedcss\Shared\NavMenu.razor.rz.scp.css
+C:\Users\mathe\Desktop\Nova pasta\Nova pasta\Web-Pos\Student.Web\obj\Debug\net6.0\scopedcss\bundle\Student.Web.styles.css
+C:\Users\mathe\Desktop\Nova pasta\Nova pasta\Web-Pos\Student.Web\obj\Debug\net6.0\scopedcss\projectbundle\Student.Web.bundle.scp.css
+C:\Users\mathe\Desktop\Nova pasta\Nova pasta\Web-Pos\Student.Web\obj\Debug\net6.0\Student.Web.dll
+C:\Users\mathe\Desktop\Nova pasta\Nova pasta\Web-Pos\Student.Web\obj\Debug\net6.0\ref\Student.Web.dll
+C:\Users\mathe\Desktop\Nova pasta\Nova pasta\Web-Pos\Student.Web\obj\Debug\net6.0\Student.Web.pdb
+C:\Users\mathe\Desktop\Nova pasta\Nova pasta\Web-Pos\Student.Web\obj\Debug\net6.0\Student.Web.genruntimeconfig.cache
+C:\Users\mathe\Desktop\Nova pasta\Nova pasta\Web-Pos\Student.Web\obj\Debug\net6.0\Student.Web.csproj.AssemblyReference.cache

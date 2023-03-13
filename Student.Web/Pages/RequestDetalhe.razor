@@ -3,103 +3,108 @@
 @using Student.Web.Model
 @using Student.Web.Service
 @inject WeatherForecastService ForecastService
-@inject SolicitacaoProjectServer SolicitacaoProjectServer;
+@inject SolicitacaoProjectServer solicitacaoProjectServer;
+@inject PropostaSolicitacaoProjetoServer propostaSolicitacaoProjetoServer;
+@inject IJSRuntime JsRuntime
 
-<div class="container">
-    <div class="card">
-        <div class="card-header">
-            <div class="d-flex justify-content-between">
-                <div class="d-flex align-items-center">
-                    <h4>Detalhes do Projeto</h4>
-                </div>
-                <div class="d-flex flex-column ">
-                    <h6 class="text-end"> @CurencyValue </h6>
-                    <p class="text-end"><i class="bi bi-info-circle-fill"></i><small class="text-uppercase">O periodo para ofertar termina em @TimeEndProject</small></p>
-                </div>
-            </div>
-        </div>
-        <div class="card-body">
-            <div>
-                <b>Detalhes</b>
-                <p>
-                   @Description
-                </p>
-            </div>
-            <div>
-                <b>
-                    Habilidades Necessárias
-                </b>
-                <div class="d-flex mb-3  mt-3 ">
-                  
-                        @*foreach (string solicitocao in SkillList)
-                        {
-                           <span class="badge rounded-pill text-bg-light border p-2 me-3">@solicitocao</span>
-                        }*@
-
-
-                </div>
+<EditForm Model="@propostaSolicitacaoProjeto" OnValidSubmit="@HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <div class="container">
+        <div class="card">
+            <div class="card-header">
                 <div class="d-flex justify-content-between">
-                    <small>ID do Projeto: @Id</small>
-                    <small>
-                        <i class="bi bi-flag-fill"></i>
-                        <a>Reportar Projeto</a>
-                    </small>
+                    <div class="d-flex align-items-center">
+                        <h4>Detalhes do Projeto</h4>
+                    </div>
+                    <div class="d-flex flex-column">
+                        <h6 class="text-end"> @CurencyValue </h6>
+                        <p class="text-end"><i class="bi bi-info-circle-fill"></i><small class="text-uppercase" > Data prevista para entrega:  @TimeEndProject</small></p>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div>
+                    <b>Detalhes</b>
+                    <p>
+                        @Description
+                    </p>
+                </div>
+                <div>
+                    <b>
+                        Habilidades Necessárias
+                    </b>
+                    <div class="d-flex mb-3  mt-3 ">
+
+                        @*foreach (string solicitocao in SkillList)
+                            {
+                            <span class="badge rounded-pill text-bg-light border p-2 me-3">@solicitocao</span>
+                            }*@
+
+
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <small>ID do Projeto: @Id</small>
+                        <small>
+                            <i class="bi bi-flag-fill"></i>
+                            <a>Reportar Projeto</a>
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card mt-2">
+            <div class="card-header">
+                <div class="d-flex justify-content-between">
+                    <div class="d-flex align-items-center">
+                        <h4>Coloque uma Oferta neste Projeto</h4>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div>
+                    <p>Você poderá editar sua oferta até que o projeto seja concedido a alguém.</p>
+                    <form>
+
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <div class="mb-3">
+                                    <label for="basic-url" class="form-label fw-bold">Valor da Oferta</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text" id="basic-addon3">R$</span>
+                                        <input @bind-value="propostaSolicitacaoProjeto.Orçamento" type="text" class="form-control" id="basic-url" aria-describedby="basic-addon3">
+                                        <span class="input-group-text">BR</span>
+                                    </div>
+                                    <div class="form-text">Example help text goes outside the input group.</div>
+                                </div>
+                            </div>
+
+                            <div class="form-group col-md-6">
+                                <div class="mb-3">
+                                    <label for="basic-url" class="form-label fw-bold">Quantidade de Dias</label>
+                                    <div class="input-group">
+                                        <input @bind-value="propostaSolicitacaoProjeto.TempoEntrega" type="text" class="form-control" id="basic-url" aria-describedby="basic-addon3">
+                                        <span class="input-group-text">Dias</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group col-md-12">
+                                <label for="exampleFormControlTextarea1" class="form-label">Descreva sua proposta</label>
+                                <textarea @bind-value="propostaSolicitacaoProjeto.Descircao" @bind-value:event="oninput" class="form-control" placeholder="O que te torna o melhor candidato para esse projeto?" id="exampleFormControlTextarea1" rows="10"></textarea>
+                            </div>
+                        </div>
+                        <div class="col text-right">
+                            <button @onclick="Save" type="submit" class="btn btn-primary">Enviar</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
-    <div class="card mt-2">
-        <div class="card-header">
-            <div class="d-flex justify-content-between">
-                <div class="d-flex align-items-center">
-                    <h4>Coloque uma Oferta neste Projeto</h4>
-                </div>
-            </div>
-        </div>
-        <div class="card-body">
-            <div>
-                <p>Você poderá editar sua oferta até que o projeto seja concedido a alguém.</p>
-                <form>
-
-                    <div class="form-row">
-                        <div class="form-group col-md-6">
-                            <div class="mb-3">
-                                <label for="basic-url" class="form-label fw-bold">Valor da Oferta</label>
-                                <div class="input-group">
-                                    <span class="input-group-text" id="basic-addon3">R$</span>
-                                    <input type="text" class="form-control" id="basic-url" aria-describedby="basic-addon3">
-                                    <span class="input-group-text">BR</span>
-                                </div>
-                                <div class="form-text">Example help text goes outside the input group.</div>
-                            </div>
-                        </div>
-
-                        <div class="form-group col-md-6">
-                            <div class="mb-3">
-                                <label for="basic-url" class="form-label fw-bold">Valor da Oferta</label>
-                                <div class="input-group">
-                                    <input type="text" class="form-control" id="basic-url" aria-describedby="basic-addon3">
-                                    <span class="input-group-text">Dias</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group col-md-12">
-                            <label for="exampleFormControlTextarea1" class="form-label">Descreva sua proposta</label>
-                            <textarea class="form-control" placeholder="O que te torna o melhor candidato para esse projeto?" id="exampleFormControlTextarea1" rows="10"></textarea>
-                        </div>
-                    </div>
-                    <div class="col text-right">
-                        <button type="submit" class="btn btn-primary">Enviar</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
+</EditForm>
 @code {
 
     [Parameter]
@@ -111,10 +116,17 @@
     public string CurencyValue { get; set; }
 
     private SolicitacaoProjeto solicitacaoProjeto;
+    PropostaSolicitacaoProjeto propostaSolicitacaoProjeto = new PropostaSolicitacaoProjeto();
 
     protected override async Task OnInitializedAsync()
     {
-        solicitacaoProjeto = await SolicitacaoProjectServer.FindById(Id);
+
+
+
+        solicitacaoProjeto = await solicitacaoProjectServer.FindById(Id);
+
+
+        propostaSolicitacaoProjeto.IdPropostaSolucao = Id;
 
         string dataInit = solicitacaoProjeto.DataInicio.ToString();
 
@@ -135,10 +147,32 @@
 
         int totalDias = date.Days;
 
-        TimeEndProject = String.Format("{0} dias, {1} horas",
-                         date.Hours, date.Days);
+        TimeEndProject =   solicitacaoProjeto.DataFim.ToString();//String.Format("{0} dias, {1} horas",
+                         //date.Hours, date.Days);
 
         Description = solicitacaoProjeto.Descricao;
     }
 
+    private void HandleValidSubmit()
+    {
+        var test = propostaSolicitacaoProjeto;
+    }
+
+    private async Task Save()
+    {
+        if (propostaSolicitacaoProjeto.Descircao == "" || propostaSolicitacaoProjeto.Orçamento == "" || propostaSolicitacaoProjeto.TempoEntrega == 0)
+        {
+            await JsRuntime.InvokeVoidAsync("alert", "Preencher todos os campos"); // Alert
+            return;
+        }
+
+        propostaSolicitacaoProjeto.IdUsuario = 1;
+        var result = await propostaSolicitacaoProjetoServer.Create(propostaSolicitacaoProjeto);
+
+
+        if (result == "OK")
+            await JsRuntime.InvokeAsync<string>("Alert", "Salvo com no sucesso!"); // Alert
+        else
+            await JsRuntime.InvokeAsync<string>("Alert", "Error:" + result);; // Alert
+    }
 }

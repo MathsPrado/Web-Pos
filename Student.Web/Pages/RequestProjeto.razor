@@ -86,6 +86,8 @@
             return;
         }
         editContext = new EditContext(solicitacaoProjeto);
+        solicitacaoProjeto.DataFim = dateEnd;
+        solicitacaoProjeto.DataInicio = dateStart;
         var result = await solicitacaoProjectServer.Create(solicitacaoProjeto);
         if(result == "OK")
             await JsRuntime.InvokeVoidAsync("alert", "Salvo com sucesso!"); // Alert

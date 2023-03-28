@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Student.Web.Data;
+using Student.Web.Service;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,6 +29,10 @@ namespace Student.Web
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddSingleton<WeatherForecastService>();
+            services.AddSingleton<SolicitacaoProjectServer>();
+            services.AddSingleton<PropostaSolicitacaoProjetoServer>();
+            services.AddSingleton<UserService>();
+            services.AddHttpClient();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

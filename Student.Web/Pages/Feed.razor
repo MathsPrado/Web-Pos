@@ -1,12 +1,15 @@
 ﻿@page "/feed"
 @using Student.Web.Data
 @using Student.Web.Model
+@using Student.Web.Service
 @inject WeatherForecastService ForecastService
+@inject SolicitacaoProjectServer SolicitacaoProjectServer
+@inject NavigationManager NavigationManager
 
 <h1>Projetos</h1>
 
 
-@if (forecasts == null)
+@if (SolicitacaoProjeto == null)
 {
     <p><em>Loading...</em></p>
 }
@@ -16,21 +19,20 @@ else
         <thead>
             <tr style="background-color: #38598b; color:white">
                 <th>Projeto</th>
-                <th>Valor</th>
                 <th>Orçamento</th>
                 <th>Localização</th>
                 <th>Status</th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var forecast in forecasts)
+            @foreach (var solicitacaoProjeto in SolicitacaoProjeto)
             {
                 <tr>
-                    <td>@forecast.Date.ToShortDateString()</td>
-                    <td>@forecast.TemperatureC</td>
-                    <td>@forecast.TemperatureF</td>
-                    <td>@forecast.Summary</td>
-                    <td> <button type="submit" class="btn btn-primary">Abrir</button></td>
+                    <td>@solicitacaoProjeto.Titulo</td>
+                    <td>@solicitacaoProjeto.Orçamento</td>
+                    <td>@solicitacaoProjeto.Local</td>
+                    @*<td>@forecast.Summary</td>*@
+                    <td> <button type="submit" class="btn btn-primary" @onclick="(() => OpenDetalhe(solicitacaoProjeto.Id))">Abrir</button></td>
                 </tr>
             }
         </tbody>
@@ -39,9 +41,16 @@ else
 
 @code {
     private WeatherForecast[] forecasts;
+    private IEnumerable<SolicitacaoProjeto> SolicitacaoProjeto;
 
     protected override async Task OnInitializedAsync()
     {
+        SolicitacaoProjeto = await SolicitacaoProjectServer.GetAll();
         forecasts = await ForecastService.GetForecastAsync(DateTime.Now);
+    }
+
+    private void OpenDetalhe(int id)
+    {
+        NavigationManager.NavigateTo("/RequestDetalhe/" + id);
     }
 }

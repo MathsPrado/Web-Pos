@@ -5,6 +5,7 @@ namespace Student.Web.Model
 {
     public class SolicitacaoProjeto
     {
+        public int Id { get; set; }
         public string Titulo { get; set; }
         public DateTime DataInicio { get; set; }
         public DateTime DataFim { get; set; }

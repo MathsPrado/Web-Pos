@@ -12,7 +12,7 @@ namespace Student.Web.Service
     public class PropostaSolicitacaoProjetoServer
     {
         public readonly HttpClient httpClient;
-        const string site = "https://studentapi20230312112028.azurewebsites.net/api/PropostaSolicitacaoProjeto";
+        const string site = "http://localhost:46497/api/SolicitacaoProjeto";
 
         public PropostaSolicitacaoProjetoServer(HttpClient httpClient)
         {

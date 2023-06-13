@@ -3,6 +3,7 @@
 @using Student.Web.Service
 @inject SolicitacaoProjectServer solicitacaoProjectServer;
 @inject IJSRuntime JsRuntime
+@inject NavigationManager uriHelper;
 
 <div class="container">
     <div class="row justify-content-center">
@@ -89,8 +90,10 @@
         solicitacaoProjeto.DataFim = dateEnd;
         solicitacaoProjeto.DataInicio = dateStart;
         var result = await solicitacaoProjectServer.Create(solicitacaoProjeto);
-        if(result == "OK")
+        if(result == "OK"){
             await JsRuntime.InvokeVoidAsync("alert", "Salvo com sucesso!"); // Alert
+                              uriHelper.NavigateTo(uriHelper.Uri, forceLoad: true);  
+        }
         else
             await JsRuntime.InvokeVoidAsync("alert", "Erro:"+result); // Alert
 

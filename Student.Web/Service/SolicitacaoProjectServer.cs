@@ -11,7 +11,7 @@ namespace Student.Web.Service
     public class SolicitacaoProjectServer 
     {
         public readonly HttpClient httpClient;
-        const string site = "https://studentapi20230312112028.azurewebsites.net/api/SolicitacaoProjeto";
+        const string site = "http://localhost:46497/api/SolicitacaoProjeto";
 
         public SolicitacaoProjectServer(HttpClient httpClient)
         {

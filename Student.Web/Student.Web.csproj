@@ -4,4 +4,18 @@
     <TargetFramework>net6.0</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Include="wwwroot\css\Profile.css" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="Pages\Profile.razor">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Util\Css\Profile\" />
+  </ItemGroup>
+
 </Project>

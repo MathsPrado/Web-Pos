@@ -13,6 +13,9 @@
 }
 else
 {
+    
+   @if(propostaSolicitacaoProjeto.Count() > 0)
+    {
     <table class="table">
         <thead>
             <tr style="background-color: #38598b; color:white">
@@ -33,7 +36,13 @@ else
                 </tr>
             }
         </tbody>
-    </table>
+        </table>
+
+    }
+    else
+    {
+        <h5>Não foi encontrado nenhuma Inscrição</h5>
+    }
 }
 
 @code {
@@ -41,6 +50,10 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        propostaSolicitacaoProjeto = await propostaSolicitacaoProjetoServer.GetAll();
+        var result = await propostaSolicitacaoProjetoServer.GetAll();
+
+        if (result is not null)
+            propostaSolicitacaoProjeto = result;
+
     }
 }

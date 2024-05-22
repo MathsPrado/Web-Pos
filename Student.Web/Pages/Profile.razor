@@ -1,5 +1,9 @@
 ﻿@page "/profile"
-@inject IJSRuntime JsRuntime
+@using Student.Web.Data
+@using Student.Web.Model
+@using Student.Web.Service
+@inject IJSRuntime JsRuntime  
+@inject PerfilUserService perfilUserService;
 
 <h1>Profile</h1>
 @* <link href="~/css/Profile.css" rel="stylesheet" /> *@
@@ -475,5 +479,19 @@
 </div>
 
 @code {
+
+    private PerfilUser perfilUser = new PerfilUser();
     int a = 0;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            perfilUser = await perfilUserService.FindById(1);
+        }
+        catch (Exception e)
+        {
+            var testeErro = e.Message;
+        }
+    }
 }

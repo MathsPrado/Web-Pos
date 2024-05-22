@@ -31,7 +31,7 @@ namespace Student.Web
             services.AddSingleton<WeatherForecastService>();
             services.AddSingleton<SolicitacaoProjectServer>();
             services.AddSingleton<PropostaSolicitacaoProjetoServer>();
-            services.AddSingleton<UserService>();
+            services.AddSingleton<PerfilUserService>();
             services.AddHttpClient();
         }
 

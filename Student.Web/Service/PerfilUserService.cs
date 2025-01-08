@@ -50,7 +50,7 @@ namespace Student.Web.Service
             }
             catch (Exception e)
             {
-                throw new Exception(e.Message);
+                return null;
             }
         }
 

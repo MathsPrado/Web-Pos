@@ -1,61 +1,76 @@
 ﻿@page "/login"
-@layout LoginLayout
-@using Student.Web.Model
-@using Student.Web.Service
-@inject NavigationManager NavigationManager
-@inject UserService userService
+@using System.Net.Http.Json
+@inject IJSRuntime JSRuntime
+@inject HttpClient Http
+@inject NavigationManager Navigation
 
-<br />
-<br />
-<div class="d-flex justify-content-center align-items-end">
-    <div class="card" style="width:340px; height: 400px;">
-        <div class="card-body">
-            <EditForm Model="@user" OnValidSubmit="@ValidateUser">
-                <DataAnnotationsValidator />
-                <ValidationSummary />
-                <div class="text-center m-4">
-                    <a class="navbar-brand" href="">Student.Web</a>
-                </div>
-                <div class="form-floating mb-4">
-                    <label for="floatingInput">Email</label>
-                    <input type="email" class="form-control" id="floatingInput" @bind-value="user.email" placeholder="name@example.com">
-                </div>
-                <div class="form-floating mb-4">
-                    <label for="floatingPassword">Password</label>
-                    <input type="password" class="form-control" id="floatingPassword" @bind-value="user.password" placeholder="senha">
-                </div>
+<h3 class="text-center mb-4">Login</h3>
 
-                <div class="mt-4 mb-4">
-                    <button class="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
-                </div>
-                <div class="col-12 row" style="text-align:left; font-weight:bold">
-                    <span class="col-12">@LoginMesssage</span>
-                </div>
-            </EditForm>
-        </div>
+<EditForm Model="loginModel" OnValidSubmit="HandleLogin" class="login-form">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="form-group">
+        <label for="username">Usuário</label>
+        <InputText id="username" class="form-control" @bind-Value="loginModel.Username" />
     </div>
-</div>
 
+    <div class="form-group">
+        <label for="password">Senha</label>
+        <InputText id="password" type="password" class="form-control" @bind-Value="loginModel.Password" />
+    </div>
+
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary btn-block">Entrar</button>
+    </div>
+
+    @if (!string.IsNullOrEmpty(loginErrorMessage))
+    {
+        <div class="alert alert-danger">
+            @loginErrorMessage
+        </div>
+    }
+</EditForm>
 
 @code {
-    private User user = new User();
-    public string LoginMesssage { get; set; }
+    private LoginModel loginModel = new LoginModel();
+    private string loginErrorMessage;
 
-    private async Task<bool> ValidateUser()
+    public class LoginModel
     {
+        public string Username { get; set; }
+        public string Password { get; set; }
+    }
 
-        var returnedUser = await userService.LoginAsync(user);
-
-        if (returnedUser == true)
+    private async Task HandleLogin()
+    {
+        var loginData = new
         {
+            username = loginModel.Username,
+            password = loginModel.Password
+        };
 
-            NavigationManager.NavigateTo("/");
-        }
-        else
+        try
         {
-            LoginMesssage = "Email ou senha invalido.";
-        }
+            var response = await Http.PostAsJsonAsync("api/auth/login", loginData);
+            if (response.IsSuccessStatusCode)
+            {
+                var token = await response.Content.ReadAsStringAsync();
 
-        return await Task.FromResult(true);
+                // Armazenar token no localStorage via JSRuntime
+                await JSRuntime.InvokeVoidAsync("localStorage.setItem", "authToken", token);
+
+                // Redirecionar para a página principal
+                Navigation.NavigateTo("/home");
+            }
+            else
+            {
+                loginErrorMessage = "Credenciais inválidas. Tente novamente.";
+            }
+        }
+        catch (Exception)
+        {
+            loginErrorMessage = "Ocorreu um erro ao tentar fazer login. Tente novamente.";
+        }
     }
 }

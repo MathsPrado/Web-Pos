@@ -48,3 +48,41 @@ a, .btn-link {
         right: 0.75rem;
         top: 0.5rem;
     }
+
+
+/* Estilos Globais para o Login */
+.login-form {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+    .login-form .form-group label {
+        font-weight: bold;
+    }
+
+    .login-form .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+    }
+
+        .login-form .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #004085;
+        }
+
+    .login-form .alert-danger {
+        font-size: 14px;
+        margin-top: 10px;
+    }
+
+/* Estilos de Responsividade */
+@media (max-width: 768px) {
+    .login-form {
+        padding: 15px;
+        max-width: 100%;
+    }
+}

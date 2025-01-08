@@ -50,6 +50,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
+        
         var result = await propostaSolicitacaoProjetoServer.GetAll();
 
         if (result is not null)

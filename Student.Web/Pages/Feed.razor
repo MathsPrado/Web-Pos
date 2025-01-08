@@ -11,7 +11,16 @@
 
 @if (SolicitacaoProjeto == null)
 {
-    <p><em>Loading...</em></p>
+    @if (hasErrorAPI == true)
+    {
+        <p><em>Ocorreu um erro, estamos trabalhando para ajustar (=</em></p>
+    }
+    else
+    {
+        <p><em>Loading...</em></p>
+    }
+
+    
 }
 else
 {
@@ -42,11 +51,26 @@ else
 @code {
     private WeatherForecast[] forecasts;
     private IEnumerable<SolicitacaoProjeto> SolicitacaoProjeto;
+    private bool hasErrorAPI = false;
 
     protected override async Task OnInitializedAsync()
     {
-        SolicitacaoProjeto = await SolicitacaoProjectServer.GetAll();
-        forecasts = await ForecastService.GetForecastAsync(DateTime.Now);
+
+        try
+        {
+            // forecasts = await ForecastService.GetForecastAsync(DateTime.Now);
+            SolicitacaoProjeto = await SolicitacaoProjectServer.GetAll();
+        }
+        catch(Exception e)
+        {
+            hasErrorAPI = true;
+        }
+
+        if (SolicitacaoProjeto is null)
+        {
+            hasErrorAPI = true;
+        }
+
     }
 
     private void OpenDetalhe(int id)

@@ -1,8 +1,25 @@
 {
   "version": 2,
-  "dgSpecHash": "fvGXxEfE8j0Fx6PTY6AjL/Gzkbpe6D0PFOfGnmLWwENmleRiF8szt0+WmvRvzT0t7imm0V4cUCiMSWgsMHsIOQ==",
+  "dgSpecHash": "41tloXnSfxg=",
   "success": true,
-  "projectFilePath": "C:\\Users\\mathe\\Desktop\\Nova pasta\\Nova pasta\\Web-Pos\\Student.Web\\Student.Web.csproj",
-  "expectedPackageFiles": [],
-  "logs": []
+  "projectFilePath": "C:\\Projects_Git\\web-pos-git\\Web-Pos\\Student.Web\\Student.Web.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\mathe\\.nuget\\packages\\blazored.localstorage\\4.3.0\\blazored.localstorage.4.3.0.nupkg.sha512",
+    "C:\\Users\\mathe\\.nuget\\packages\\intersoft.crosslight\\6.0.5000.975\\intersoft.crosslight.6.0.5000.975.nupkg.sha512",
+    "C:\\Users\\mathe\\.nuget\\packages\\microsoft.aspnetcore.app.internal.assets\\10.0.2\\microsoft.aspnetcore.app.internal.assets.10.0.2.nupkg.sha512"
+  ],
+  "logs": [
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "message": "O pacote 'Intersoft.Crosslight 6.0.5000.975' foi restaurado usando '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' em vez da estrutura de destino do projeto 'net10.0'. Esse pacote pode não ser totalmente compatível com o seu projeto.",
+      "projectPath": "C:\\Projects_Git\\web-pos-git\\Web-Pos\\Student.Web\\Student.Web.csproj",
+      "warningLevel": 1,
+      "filePath": "C:\\Projects_Git\\web-pos-git\\Web-Pos\\Student.Web\\Student.Web.csproj",
+      "libraryId": "Intersoft.Crosslight",
+      "targetGraphs": [
+        "net10.0"
+      ]
+    }
+  ]
 }

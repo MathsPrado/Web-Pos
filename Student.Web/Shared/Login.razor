@@ -1,0 +1,46 @@
+﻿@page "/login"
+@using MeuProjetoBlazor.Models
+@using MeuProjetoBlazor.Services
+@inject IAuthService AuthService
+@inject NavigationManager NavManager
+
+<div class="card p-4" style="max-width: 400px; margin: auto;">
+    <h3>Acessar Sistema</h3>
+
+    <div class="mb-3">
+        <label>Usuário</label>
+        <input class="form-control" @bind="loginRequest.Username" />
+    </div>
+
+    <div class="mb-3">
+        <label>Senha</label>
+        <input type="password" class="form-control" @bind="loginRequest.Password" />
+    </div>
+
+    <button class="btn btn-primary w-100" @onclick="HandleLogin">Entrar</button>
+
+    @if (!string.IsNullOrEmpty(errorMsg))
+    {
+        <div class="alert alert-danger mt-3">@errorMsg</div>
+    }
+</div>
+
+@code {
+    private LoginRequest loginRequest = new();
+    private string errorMsg;
+
+    private async Task HandleLogin()
+    {
+        // A tela delega a responsabilidade para o serviço
+        var sucesso = await AuthService.Login(loginRequest);
+
+        if (sucesso)
+        {
+            NavManager.NavigateTo("/");
+        }
+        else
+        {
+            errorMsg = "Usuário ou senha inválidos!";
+        }
+    }
+}

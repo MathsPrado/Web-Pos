@@ -1,0 +1,19 @@
+﻿@inject NavigationManager NavManager
+@using Microsoft.AspNetCore.Components.Authorization
+
+@code {
+    [CascadingParameter]
+    private Task<AuthenticationState> AuthState { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthState;
+
+        // Se o usuário for NULO ou NÃO AUTENTICADO
+        if (authState?.User?.Identity is null || !authState.User.Identity.IsAuthenticated)
+        {
+            // Força a ida para a tela de login
+            NavManager.NavigateTo("login");
+        }
+    }
+}

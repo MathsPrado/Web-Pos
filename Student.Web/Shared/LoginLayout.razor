@@ -1,0 +1,22 @@
+﻿@inherits LayoutComponentBase
+
+<div class="login-layout">
+    <main>
+        @Body
+    </main>
+</div>
+
+<style>
+    /* Isso garante que o fundo cubra a tela toda */
+    .login-layout {
+        height: 100vh;
+        width: 100vw;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); /* Fundo Gradiente Roxo/Azul */
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+    }
+</style>

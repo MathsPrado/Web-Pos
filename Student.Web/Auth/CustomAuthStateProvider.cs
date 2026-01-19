@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Components.Authorization;
 using System;
 using System.Collections.Generic;
-using System.Linq; 
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Security.Claims;
@@ -24,8 +24,18 @@ public class CustomAuthStateProvider : AuthenticationStateProvider
 
     public override async Task<AuthenticationState> GetAuthenticationStateAsync()
     {
-        // Agora ele sabe que este GetItemAsync é do Blazored
-        var token = await _localStorage.GetItemAsync<string>("authToken");
+        string token = null;
+
+        try
+        {
+            // Tenta pegar o token. Se estiver no servidor (prerender), vai falhar e cair no catch.
+            token = await _localStorage.GetItemAsync<string>("authToken");
+        }
+        catch (InvalidOperationException)
+        {
+            // Estamos no servidor, retornamos usuário anônimo temporariamente
+            return new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity()));
+        }
 
         if (string.IsNullOrWhiteSpace(token))
             return new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity()));

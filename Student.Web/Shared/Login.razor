@@ -1,46 +1,170 @@
 ﻿@page "/login"
+@layout LoginLayout  
 @using MeuProjetoBlazor.Models
 @using MeuProjetoBlazor.Services
+@using Student.Web.Model
+@using Student.Web.Service
+@using Student.Web.Shared 
 @inject IAuthService AuthService
 @inject NavigationManager NavManager
 
-<div class="card p-4" style="max-width: 400px; margin: auto;">
-    <h3>Acessar Sistema</h3>
-
-    <div class="mb-3">
-        <label>Usuário</label>
-        <input class="form-control" @bind="loginRequest.Username" />
+<div class="login-card">
+    <div class="login-header">
+        <h3>Bem-vindo</h3>
+        <p>Insira suas credenciais para acessar</p>
     </div>
 
-    <div class="mb-3">
-        <label>Senha</label>
-        <input type="password" class="form-control" @bind="loginRequest.Password" />
+    <div class="login-body">
+        <div class="form-group">
+            <label>Usuário</label>
+            <input class="form-control" @bind="loginRequest.Username" placeholder="Digite seu usuário" />
+        </div>
+
+        <div class="form-group">
+            <label>Senha</label>
+            <input type="password" class="form-control" @bind="loginRequest.Password" placeholder="Digite sua senha" />
+        </div>
+
+        <button class="btn-login" @onclick="HandleLogin" disabled="@isLoading">
+            @if (isLoading)
+            {
+                    <span>Carregando...</span>
+            }
+            else
+            {
+                    <span>Entrar</span>
+            }
+        </button>
+
+        @if (!string.IsNullOrEmpty(errorMsg))
+        {
+                <div class="alert-error">
+                    @errorMsg
+                </div>
+        }
     </div>
-
-    <button class="btn btn-primary w-100" @onclick="HandleLogin">Entrar</button>
-
-    @if (!string.IsNullOrEmpty(errorMsg))
-    {
-        <div class="alert alert-danger mt-3">@errorMsg</div>
-    }
 </div>
+
+<style>
+/* Estilo do Card (Caixinha Branca) */
+.login-card {
+    background: white;
+    padding: 2.5rem;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Cabeçalho */
+.login-header h3 {
+    color: #333;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.login-header p {
+    color: #666;
+    font-size: 0.9rem;
+    margin-bottom: 2rem;
+}
+
+/* Campos de Input */
+.form-group {
+    margin-bottom: 1.5rem;
+    text-align: left;
+}
+
+    .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        color: #444;
+        font-weight: 600;
+        font-size: 0.9rem;
+    }
+
+.form-control {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.3s;
+    box-sizing: border-box; /* Garante que o padding não estoure a largura */
+}
+
+    .form-control:focus {
+        border-color: #764ba2;
+        outline: none;
+    }
+
+/* Botão Bonito */
+.btn-login {
+    width: 100%;
+    padding: 12px;
+    background: #764ba2;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+    .btn-login:hover {
+        background: #5b3a80;
+    }
+
+    .btn-login:disabled {
+        background: #ccc;
+        cursor: not-allowed;
+    }
+
+/* Mensagem de Erro */
+.alert-error {
+    margin-top: 1rem;
+    padding: 10px;
+    background-color: #fee2e2;
+    color: #dc2626;
+    border-radius: 6px;
+    font-size: 0.9rem;
+}
+</style>
 
 @code {
     private LoginRequest loginRequest = new();
     private string errorMsg;
+    private bool isLoading = false;
 
     private async Task HandleLogin()
     {
-        // A tela delega a responsabilidade para o serviço
-        var sucesso = await AuthService.Login(loginRequest);
+        isLoading = true;
+        errorMsg = null;
+        StateHasChanged(); // Atualiza a tela para mostrar "Carregando..."
 
-        if (sucesso)
+        try
         {
-            NavManager.NavigateTo("/");
+            var sucesso = await AuthService.Login(loginRequest);
+
+            if (sucesso)
+            {
+                NavManager.NavigateTo("/"); // Redireciona para a Home
+            }
+            else
+            {
+                errorMsg = "Usuário ou senha incorretos.";
+            }
         }
-        else
+        catch (Exception)
         {
-            errorMsg = "Usuário ou senha inválidos!";
+            errorMsg = "Erro ao conectar com o servidor.";
+        }
+        finally
+        {
+            isLoading = false;
         }
     }
 }

@@ -27,7 +27,6 @@ public class CustomAuthStateProvider : AuthenticationStateProvider
     {
         string token = null;
 
-        // 1. Tenta ler do COOKIE (Funciona no Prerender/F5!)
         if (_httpContextAccessor.HttpContext?.Request?.Cookies.TryGetValue("authToken", out var cookieToken) == true)
         {
             token = cookieToken;
@@ -48,7 +47,7 @@ public class CustomAuthStateProvider : AuthenticationStateProvider
         return Task.FromResult(new AuthenticationState(user));
     }
 
-    // ... Métodos NotifyUserLogin, NotifyUserLogout e ParseClaims (mantém iguais) ...
+    // Métodos NotifyUserLogin, NotifyUserLogout e ParseClaims (mantém iguais)
     public void NotifyUserLogin(string token)
     {
         var authenticatedUser = new ClaimsPrincipal(new ClaimsIdentity(ParseClaimsFromJwt(token), "jwt"));
@@ -63,7 +62,6 @@ public class CustomAuthStateProvider : AuthenticationStateProvider
         NotifyAuthenticationStateChanged(authState);
     }
 
-    // ... Copie seus métodos ParseClaimsFromJwt e ParseBase64 aqui ...
     private IEnumerable<Claim> ParseClaimsFromJwt(string jwt)
     {
         var payload = jwt.Split('.')[1];

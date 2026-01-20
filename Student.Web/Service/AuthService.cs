@@ -1,59 +1,70 @@
-﻿using Blazored.LocalStorage;
-using MeuProjetoBlazor.Models;
-
+﻿using MeuProjetoBlazor.Models;
 using MeuProjetoBlazor.Services;
-
-// using Intersoft.Crosslight.Mobile; <--- REMOVA ESTA LINHA
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.JSInterop; // Necessário para o Cookie
 using Student.Web.Auth;
-using Student.Web.Model; // Certifique-se que seus DTOs estão aqui
+using Student.Web.Model; // Ajuste para seu namespace de Models
+using System;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 
-namespace Student.Web.Service; // Ajustado para o nome do seu projeto
+namespace Student.Web.Service;
 
 public class AuthService : IAuthService
 {
     private readonly HttpClient _httpClient;
     private readonly AuthenticationStateProvider _authStateProvider;
-    private readonly ILocalStorageService _localStorage;
+    private readonly IJSRuntime _jsRuntime; // Usamos JS para gravar Cookie
 
     public AuthService(HttpClient httpClient,
                        AuthenticationStateProvider authStateProvider,
-                       ILocalStorageService localStorage)
+                       IJSRuntime jsRuntime)
     {
         _httpClient = httpClient;
         _authStateProvider = authStateProvider;
-        _localStorage = localStorage;
+        _jsRuntime = jsRuntime;
     }
 
     public async Task<bool> Login(LoginRequest loginRequest)
     {
-        var urlLogin = "https://localhost:44303/api/Auth/login"; //fixx
+        // 1. URL FIXA DO LOGIN (Como o senhor pediu)
+        var urlLogin = "https://localhost:44303/api/Auth/login";
 
-        var result = await _httpClient.PostAsJsonAsync(urlLogin, loginRequest);
+        try
+        {
+            // O HttpClient usa a URL completa, ignorando o BaseAddress se houver
+            var result = await _httpClient.PostAsJsonAsync(urlLogin, loginRequest);
 
-        if (!result.IsSuccessStatusCode)
+            if (!result.IsSuccessStatusCode)
+                return false;
+
+            var content = await result.Content.ReadFromJsonAsync<LoginResponse>();
+
+            if (content == null || string.IsNullOrEmpty(content.Token))
+                return false;
+
+            // 2. SALVAR NO COOKIE (Para funcionar com SEO/Prerender e F5)
+            // A chave é apenas um nome simples "authToken", não uma URL.
+            await _jsRuntime.InvokeVoidAsync("blazorExtensions.writeCookie", "authToken", content.Token, 1);
+
+            // 3. Notificar o sistema
+            ((CustomAuthStateProvider)_authStateProvider).NotifyUserLogin(content.Token);
+
+            return true;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Erro no login: {ex.Message}");
             return false;
-
-        var content = await result.Content.ReadFromJsonAsync<LoginResponse>();
-
-        if (content == null || string.IsNullOrEmpty(content.Token))
-            return false;
-
-        var urlToken = "https://localhost:44303/api/Auth/authToken"; //fixx
-
-        await _localStorage.SetItemAsync(urlToken, content.Token);
-
-        ((CustomAuthStateProvider)_authStateProvider).NotifyUserLogin(content.Token);
-
-        return true;
+        }
     }
 
     public async Task Logout()
     {
-        await _localStorage.RemoveItemAsync("authToken");
+        // Remove o Cookie usando a mesma chave simples "authToken"
+        await _jsRuntime.InvokeVoidAsync("blazorExtensions.deleteCookie", "authToken");
+
         ((CustomAuthStateProvider)_authStateProvider).NotifyUserLogout();
     }
 }

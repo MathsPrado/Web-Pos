@@ -31,5 +31,26 @@
     </div>
 
     <script src="_framework/blazor.server.js"></script>
+
+    <script>
+        window.blazorExtensions = {
+            writeCookie: function (name, value, days) {
+                var expires;
+                if (days) {
+                    var date = new Date();
+                    date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+                    expires = "; expires=" + date.toGMTString();
+                }
+                else {
+                    expires = "";
+                }
+                // Importante: path=/ garante que o cookie vale para todo o site
+                document.cookie = name + "=" + value + expires + "; path=/; Secure; SameSite=Strict";
+            },
+            deleteCookie: function (name) {
+                document.cookie = name + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+            }
+        };
+    </script>
 </body>
 </html>

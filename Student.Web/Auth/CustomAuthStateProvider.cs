@@ -1,50 +1,54 @@
-﻿using Blazored.LocalStorage;
-using Microsoft.AspNetCore.Components.Authorization;
+﻿using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Http; // Para IHttpContextAccessor
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Text.Json;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace Student.Web.Auth;
 
 public class CustomAuthStateProvider : AuthenticationStateProvider
 {
-    private readonly ILocalStorageService _localStorage;
+    private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly HttpClient _http;
 
-    public CustomAuthStateProvider(ILocalStorageService localStorage, HttpClient http)
+    // Removemos LocalStorage e injetamos HttpContextAccessor
+    public CustomAuthStateProvider(IHttpContextAccessor httpContextAccessor, HttpClient http)
     {
-        _localStorage = localStorage;
+        _httpContextAccessor = httpContextAccessor;
         _http = http;
     }
 
-    public override async Task<AuthenticationState> GetAuthenticationStateAsync()
+    public override Task<AuthenticationState> GetAuthenticationStateAsync()
     {
         string token = null;
 
-        try
+        // 1. Tenta ler do COOKIE (Funciona no Prerender/F5!)
+        if (_httpContextAccessor.HttpContext?.Request?.Cookies.TryGetValue("authToken", out var cookieToken) == true)
         {
-            // Tenta pegar o token. Se estiver no servidor (prerender), vai falhar e cair no catch.
-            token = await _localStorage.GetItemAsync<string>("authToken");
-        }
-        catch (InvalidOperationException)
-        {
-            // Estamos no servidor, retornamos usuário anônimo temporariamente
-            return new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity()));
+            token = cookieToken;
         }
 
+        // Se não achou token
         if (string.IsNullOrWhiteSpace(token))
-            return new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity()));
+        {
+            return Task.FromResult(new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity())));
+        }
 
+        // Se achou, configura o usuário
         _http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-        return new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity(ParseClaimsFromJwt(token), "jwt")));
+        var identity = new ClaimsIdentity(ParseClaimsFromJwt(token), "jwt");
+        var user = new ClaimsPrincipal(identity);
+
+        return Task.FromResult(new AuthenticationState(user));
     }
 
+    // ... Métodos NotifyUserLogin, NotifyUserLogout e ParseClaims (mantém iguais) ...
     public void NotifyUserLogin(string token)
     {
         var authenticatedUser = new ClaimsPrincipal(new ClaimsIdentity(ParseClaimsFromJwt(token), "jwt"));
@@ -59,6 +63,7 @@ public class CustomAuthStateProvider : AuthenticationStateProvider
         NotifyAuthenticationStateChanged(authState);
     }
 
+    // ... Copie seus métodos ParseClaimsFromJwt e ParseBase64 aqui ...
     private IEnumerable<Claim> ParseClaimsFromJwt(string jwt)
     {
         var payload = jwt.Split('.')[1];

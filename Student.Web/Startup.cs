@@ -38,6 +38,8 @@ namespace Student.Web
             services.AddSingleton<PropostaSolicitacaoProjetoServer>();
             services.AddSingleton<PerfilUserService>();
 
+            services.AddHttpContextAccessor();
+
             // --- 2. CORREÇÃO DO ERRO DE LOCAL STORAGE ---
             // Isso resolve o erro: "Unable to resolve service for type Blazored.LocalStorage"
             services.AddBlazoredLocalStorage();

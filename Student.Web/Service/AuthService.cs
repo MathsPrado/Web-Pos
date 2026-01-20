@@ -44,9 +44,9 @@ public class AuthService : IAuthService
             if (content == null || string.IsNullOrEmpty(content.Token))
                 return false;
 
-            // 2. SALVAR NO COOKIE (Para funcionar com SEO/Prerender e F5)
-            // A chave é apenas um nome simples "authToken", não uma URL.
-            await _jsRuntime.InvokeVoidAsync("blazorExtensions.writeCookie", "authToken", content.Token, 1);
+            // Ao passar "0", o JavaScript entende que não deve pôr data de validade.
+            // O navegador entende isso como "Delete ao fechar a janela".
+            await _jsRuntime.InvokeVoidAsync("blazorExtensions.writeCookie", "authToken", content.Token, 0);
 
             // 3. Notificar o sistema
             ((CustomAuthStateProvider)_authStateProvider).NotifyUserLogin(content.Token);

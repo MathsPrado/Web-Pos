@@ -1,44 +1,8 @@
 ﻿@inject NavigationManager NavManager
-@inject Blazored.LocalStorage.ILocalStorageService LocalStorage
-@using Microsoft.AspNetCore.Components.Authorization
-
-@* 1. Enquanto verifica, mostramos um Loading bonito para o usuário não ver tela quebrada *@
-<div style="display:flex; justify-content:center; align-items:center; height:50vh; flex-direction:column;">
-    <div class="spinner-border text-primary" role="status"></div>
-    <p style="margin-top:15px; color:#666;">Verificando credenciais...</p>
-</div>
 
 @code {
-    [CascadingParameter]
-    private Task<AuthenticationState> AuthState { get; set; }
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+    protected override void OnInitialized()
     {
-        if (firstRender)
-        {
-            // 1. Verifica o estado atual do Blazor
-            var authState = await AuthState;
-
-            // Se o Blazor já diz que está logado, tudo certo. Pare.
-            if (authState?.User?.Identity is not null && authState.User.Identity.IsAuthenticated)
-            {
-                return;
-            }
-
-            // 2. A PROVA REAL: (O Pulo do Gato 🐱)
-            // Se o Blazor diz que NÃO está logado, pode ser só atraso do Prerender.
-            // Vamos checar manualmente se o token existe no navegador.
-            var token = await LocalStorage.GetItemAsync<string>("authToken");
-
-            // 3. Se tiver token, NÃO redirecione.
-            // O CustomAuthStateProvider vai ler esse token em breve e atualizar a tela sozinho.
-            if (!string.IsNullOrEmpty(token))
-            {
-                return;
-            }
-
-            // 4. Se chegou aqui, é porque não tem token MESMO. Pode chutar para o login.
-            NavManager.NavigateTo("login");
-        }
+        NavManager.NavigateTo("login", true);
     }
 }

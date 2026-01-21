@@ -10,7 +10,7 @@ Frontend utilizado em https://github.com/MathsPrado/API-Pos (API)
 
 ## Pré-requisitos
 
-- **[.NET 6 SDK](https://dotnet.microsoft.com/download/dotnet/6.0)**: Necessário para construir e executar a aplicação Blazor.
+- **[.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0](https://dotnet.microsoft.com/en-us/download/dotnet/10.0))**: Necessário para construir e executar a aplicação Blazor.
 - **[Um navegador moderno](https://browsehappy.com/)**: Como Chrome, Firefox, Edge, ou Safari.
 - **A API de Backend em execução**: O frontend espera se comunicar com a API em https://github.com/MathsPrado/API-Pos.
 

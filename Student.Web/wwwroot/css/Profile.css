@@ -102,6 +102,7 @@
 .avatar-sm {
     height: 2rem;
     width: 2rem;
+    object-fit: cover;
 }
 
 .nav-tabs-custom .nav-item {

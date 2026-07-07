@@ -53,6 +53,10 @@ namespace Student.Web
             services.AddHttpClient<IAuthService, AuthService>(client =>
             {
                 client.BaseAddress = new Uri("https://localhost:7152/");
+            })
+            .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
+            {
+                ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
             });
         }
 

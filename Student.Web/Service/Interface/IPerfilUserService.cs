@@ -9,6 +9,7 @@ namespace Student.Web.Service
     {
         IEnumerable<PerfilUser> GetAll();
         Task<PerfilUser> FindById(int id);
+        Task<PerfilUser> FindByEmail(string email);
         PerfilUser Create(PerfilUser value);
         PerfilUser Update(PerfilUser value);
         PerfilUser Delete(int id);

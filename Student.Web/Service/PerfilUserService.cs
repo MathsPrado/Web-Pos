@@ -54,6 +54,33 @@ namespace Student.Web.Service
             }
         }
 
+        public async Task<PerfilUser> FindByEmail(string email)
+        {
+            try
+            {
+                HttpClient client = new HttpClient();
+                var url = site + "/email/" + email;
+                System.Console.WriteLine($"[DIAG SERVICE] Fetching profile from: {url}");
+                var response = await client.GetAsync(url).ConfigureAwait(false);
+                System.Console.WriteLine($"[DIAG SERVICE] HTTP status: {response.StatusCode}");
+                var contentStr = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                System.Console.WriteLine($"[DIAG SERVICE] Content: {contentStr}");
+                var options = new System.Text.Json.JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                };
+                var a = System.Text.Json.JsonSerializer.Deserialize<PerfilUser>(contentStr, options);
+                System.Console.WriteLine($"[DIAG SERVICE] Fetch success! Name: {a?.Nome}, Skills: {a?.Skills?.Count}");
+                return a;
+            }
+            catch (Exception e)
+            {
+                System.Console.WriteLine($"[DIAG SERVICE] ERROR fetching profile: {e.GetType().Name} - {e.Message}");
+                System.Console.WriteLine(e.StackTrace);
+                return null;
+            }
+        }
+
 
         public async Task<IEnumerable<PerfilUser>> GetAll()
         {

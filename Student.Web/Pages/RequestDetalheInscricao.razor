@@ -5,46 +5,203 @@
 @using Student.Web.Service
 @inject WeatherForecastService ForecastService
 @inject PropostaSolicitacaoProjetoServer propostaSolicitacaoProjetoServer;
-<h1>Inscrições em projetos</h1>
+@inject NavigationManager NavManager
 
+<div class="container py-4">
+    <div class="feed-header mb-4 animate-fade-in">
+        <h1 class="feed-title">Minhas Inscrições</h1>
+        <p class="feed-subtitle text-muted">Acompanhe as propostas de orçamento e prazos que você enviou para projetos da plataforma.</p>
+    </div>
 
-@if (propostaSolicitacaoProjeto == null)
-{
-    <p><em>Loading...</em></p>
-}
-else
-{
-    
-   @if(propostaSolicitacaoProjeto.Count() > 0)
+    @if (propostaSolicitacaoProjeto == null)
     {
-    <table class="table">
-        <thead>
-            <tr style="background-color: #38598b; color:white">
-                <th>Projeto</th>
-                <th>Orçamento</th>
-                <th>Tempo De Entrega</th>
-                <th>Usuário</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var solicitacaoProjeto in propostaSolicitacaoProjeto)
-            {
-                <tr>
-                    <td>@solicitacaoProjeto.Id</td>
-                    <td>@solicitacaoProjeto.Orçamento</td>
-                    <td>@solicitacaoProjeto.TempoEntrega/Dias</td>
-                    <td>@solicitacaoProjeto.IdUsuario</td>
-                </tr>
-            }
-        </tbody>
-        </table>
-
+        <div class="d-flex justify-content-center py-5">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
     }
     else
     {
-        <h5>Não foi encontrado nenhuma Inscrição</h5>
+        @if (!propostaSolicitacaoProjeto.Any())
+        {
+            <div class="no-projects-card text-center py-5 animate-fade-in">
+                <i class="bi bi-journal-x no-projects-icon"></i>
+                <h3>Nenhuma inscrição encontrada</h3>
+                <p class="text-muted">Explore o feed de oportunidades e envie propostas para começar!</p>
+                <div class="mt-4">
+                    <button class="btn btn-primary-gradient" @onclick='() => NavManager.NavigateTo("Feed")'>
+                        <i class="bi bi-compass me-2"></i> Explorar Feed
+                    </button>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="row g-4 animate-fade-in">
+                @foreach (var proposta in propostaSolicitacaoProjeto)
+                {
+                    <div class="col-md-6 col-lg-4">
+                        <div class="inscription-card h-100 d-flex flex-column justify-content-between">
+                            <div>
+                                <div class="inscription-badge mb-3">
+                                    <i class="bi bi-journal-check me-1"></i> Proposta Ativa
+                                </div>
+                                <h3 class="inscription-card-title">Inscrição #@proposta.Id</h3>
+                            </div>
+                            
+                            <div class="my-3">
+                                <div class="info-row d-flex align-items-center mb-2">
+                                    <span class="info-icon text-success me-2"><i class="bi bi-cash-stack"></i></span>
+                                    <span class="info-text">Orçamento Proposto: <strong class="text-dark">R$ @proposta.Orçamento</strong></span>
+                                </div>
+                                <div class="info-row d-flex align-items-center mb-2">
+                                    <span class="info-icon text-primary me-2"><i class="bi bi-clock-history"></i></span>
+                                    <span class="info-text">Tempo de Entrega: <strong class="text-dark">@proposta.TempoEntrega dias</strong></span>
+                                </div>
+                                <div class="info-row d-flex align-items-center">
+                                    <span class="info-icon text-secondary me-2"><i class="bi bi-person-fill"></i></span>
+                                    <span class="info-text">ID Candidato: <span class="text-secondary">#@proposta.IdUsuario</span></span>
+                                </div>
+                            </div>
+                            
+                            <div class="card-status-badge text-center py-2 rounded">
+                                <i class="bi bi-hourglass-split me-1"></i> Status: Aguardando Retorno
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
     }
+</div>
+
+<style>
+/* Modern Inscription Designs */
+.feed-header {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    padding-bottom: 1rem;
 }
+
+.feed-title {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: #1a082e;
+    margin-bottom: 0.25rem;
+}
+
+.feed-subtitle {
+    font-size: 0.95rem;
+}
+
+/* Inscription cards */
+.inscription-card {
+    background: #ffffff;
+    border: 1px solid rgba(75, 27, 138, 0.06);
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.02);
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.inscription-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(75, 27, 138, 0.07);
+    border-color: rgba(75, 27, 138, 0.16);
+}
+
+.inscription-badge {
+    display: inline-flex;
+    align-items: center;
+    background: rgba(13, 110, 253, 0.05);
+    color: #0d6efd;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    border: 1px solid rgba(13, 110, 253, 0.1);
+}
+
+.inscription-card-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #2b233c;
+    line-height: 1.4;
+    margin: 0;
+}
+
+.info-row {
+    font-size: 0.9rem;
+}
+
+.info-icon {
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+}
+
+.info-text {
+    color: #695e78;
+}
+
+.card-status-badge {
+    font-size: 0.85rem;
+    font-weight: 600;
+    background: #f8f9fa;
+    color: #6c757d;
+    border: 1px solid rgba(0, 0, 0, 0.03);
+}
+
+/* Empty State */
+.no-projects-card {
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.02);
+}
+
+.no-projects-icon {
+    font-size: 3rem;
+    color: #a9a2b5;
+    margin-bottom: 1rem;
+    display: block;
+}
+
+.no-projects-card h3 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #2b233c;
+    margin-bottom: 0.5rem;
+}
+
+.btn-primary-gradient {
+    background: linear-gradient(135deg, #a370f7 0%, #764ba2 100%);
+    color: #ffffff !important;
+    border: none;
+    padding: 10px 24px;
+    font-weight: 600;
+    border-radius: 8px;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 15px rgba(118, 75, 162, 0.4);
+    display: inline-flex;
+    align-items: center;
+}
+
+.btn-primary-gradient:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(118, 75, 162, 0.5);
+}
+
+/* Animations */
+.animate-fade-in {
+    animation: fadeIn 0.4s ease-out;
+}
+
+@@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+</style>
 
 @code {
     private IEnumerable<PropostaSolicitacaoProjeto> propostaSolicitacaoProjeto;

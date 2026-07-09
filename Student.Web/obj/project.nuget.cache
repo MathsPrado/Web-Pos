@@ -1,14 +1,39 @@
 {
   "version": 2,
-  "dgSpecHash": "41tloXnSfxg=",
+  "dgSpecHash": "EALdtRtK6Cw=",
   "success": true,
   "projectFilePath": "C:\\Projects_Git\\web-pos-git\\Web-Pos\\Student.Web\\Student.Web.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\mathe\\.nuget\\packages\\blazored.localstorage\\4.3.0\\blazored.localstorage.4.3.0.nupkg.sha512",
     "C:\\Users\\mathe\\.nuget\\packages\\intersoft.crosslight\\6.0.5000.975\\intersoft.crosslight.6.0.5000.975.nupkg.sha512",
-    "C:\\Users\\mathe\\.nuget\\packages\\microsoft.aspnetcore.app.internal.assets\\10.0.2\\microsoft.aspnetcore.app.internal.assets.10.0.2.nupkg.sha512"
+    "C:\\Users\\mathe\\.nuget\\packages\\microsoft.aspnetcore.app.internal.assets\\10.0.9\\microsoft.aspnetcore.app.internal.assets.10.0.9.nupkg.sha512",
+    "C:\\Users\\mathe\\.nuget\\packages\\microsoft.aspnetcore.authorization\\7.0.0\\microsoft.aspnetcore.authorization.7.0.0.nupkg.sha512",
+    "C:\\Users\\mathe\\.nuget\\packages\\microsoft.aspnetcore.components\\7.0.0\\microsoft.aspnetcore.components.7.0.0.nupkg.sha512",
+    "C:\\Users\\mathe\\.nuget\\packages\\microsoft.aspnetcore.components.analyzers\\7.0.0\\microsoft.aspnetcore.components.analyzers.7.0.0.nupkg.sha512",
+    "C:\\Users\\mathe\\.nuget\\packages\\microsoft.aspnetcore.components.forms\\7.0.0\\microsoft.aspnetcore.components.forms.7.0.0.nupkg.sha512",
+    "C:\\Users\\mathe\\.nuget\\packages\\microsoft.aspnetcore.components.web\\7.0.0\\microsoft.aspnetcore.components.web.7.0.0.nupkg.sha512",
+    "C:\\Users\\mathe\\.nuget\\packages\\microsoft.aspnetcore.metadata\\7.0.0\\microsoft.aspnetcore.metadata.7.0.0.nupkg.sha512",
+    "C:\\Users\\mathe\\.nuget\\packages\\microsoft.extensions.dependencyinjection\\7.0.0\\microsoft.extensions.dependencyinjection.7.0.0.nupkg.sha512",
+    "C:\\Users\\mathe\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\7.0.0\\microsoft.extensions.dependencyinjection.abstractions.7.0.0.nupkg.sha512",
+    "C:\\Users\\mathe\\.nuget\\packages\\microsoft.extensions.logging.abstractions\\7.0.0\\microsoft.extensions.logging.abstractions.7.0.0.nupkg.sha512",
+    "C:\\Users\\mathe\\.nuget\\packages\\microsoft.extensions.options\\7.0.0\\microsoft.extensions.options.7.0.0.nupkg.sha512",
+    "C:\\Users\\mathe\\.nuget\\packages\\microsoft.extensions.primitives\\7.0.0\\microsoft.extensions.primitives.7.0.0.nupkg.sha512",
+    "C:\\Users\\mathe\\.nuget\\packages\\microsoft.jsinterop\\7.0.0\\microsoft.jsinterop.7.0.0.nupkg.sha512",
+    "C:\\Users\\mathe\\.nuget\\packages\\system.io.pipelines\\7.0.0\\system.io.pipelines.7.0.0.nupkg.sha512"
   ],
   "logs": [
+    {
+      "code": "NU1902",
+      "level": "Warning",
+      "message": "O pacote 'Microsoft.AspNetCore.Components' 7.0.0 tem uma moderado vulnerabilidade de gravidade conhecida, https://github.com/advisories/GHSA-3fx3-85r4-8j3w",
+      "projectPath": "C:\\Projects_Git\\web-pos-git\\Web-Pos\\Student.Web\\Student.Web.csproj",
+      "warningLevel": 1,
+      "filePath": "C:\\Projects_Git\\web-pos-git\\Web-Pos\\Student.Web\\Student.Web.csproj",
+      "libraryId": "Microsoft.AspNetCore.Components",
+      "targetGraphs": [
+        "net10.0"
+      ]
+    },
     {
       "code": "NU1701",
       "level": "Warning",

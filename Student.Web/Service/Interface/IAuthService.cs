@@ -7,4 +7,5 @@ public interface IAuthService
 {
     Task<bool> Login(LoginRequest loginRequest);
     Task Logout();
+    Task<bool> Register(RegisterRequest registerRequest);
 }

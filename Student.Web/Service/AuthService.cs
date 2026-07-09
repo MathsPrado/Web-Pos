@@ -67,4 +67,58 @@ public class AuthService : IAuthService
 
         ((CustomAuthStateProvider)_authStateProvider).NotifyUserLogout();
     }
+
+    public async Task<bool> Register(RegisterRequest registerRequest)
+    {
+        var urlRegister = "https://localhost:44303/api/Auth/register";
+        var authPayload = new
+        {
+            Username = registerRequest.Email,
+            Password = registerRequest.Password,
+            InitialRole = "User"
+        };
+
+        try
+        {
+            var result = await _httpClient.PostAsJsonAsync(urlRegister, authPayload);
+
+            if (!result.IsSuccessStatusCode)
+                return false;
+
+            var content = await result.Content.ReadFromJsonAsync<LoginResponse>();
+
+            if (content == null || string.IsNullOrEmpty(content.Token))
+                return false;
+
+            // Criar perfil na API de Estudante
+            var urlProfile = "http://localhost:46497/api/ProfileUser";
+            var profilePayload = new
+            {
+                Nome = registerRequest.Nome,
+                Sobrenome = registerRequest.Sobrenome,
+                Email = registerRequest.Email,
+                PasswordHash = registerRequest.Password
+            };
+
+            using (var profileClient = new HttpClient())
+            {
+                var profileResult = await profileClient.PostAsJsonAsync(urlProfile, profilePayload);
+                if (!profileResult.IsSuccessStatusCode)
+                {
+                    Console.WriteLine($"Aviso: Erro ao criar perfil do estudante no Student.API: {profileResult.StatusCode}");
+                }
+            }
+
+            // Gravar o Cookie do Token e notificar AuthState
+            await _jsRuntime.InvokeVoidAsync("blazorExtensions.writeCookie", "authToken", content.Token, 0);
+            ((CustomAuthStateProvider)_authStateProvider).NotifyUserLogin(content.Token);
+
+            return true;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Erro no cadastro: {ex.Message}");
+            return false;
+        }
+    }
 }

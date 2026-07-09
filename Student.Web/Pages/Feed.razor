@@ -8,47 +8,202 @@
 @using Microsoft.AspNetCore.Authorization
 @attribute [Authorize]
 
-<h1>Projetos</h1>
+<div class="container py-4">
+    <div class="feed-header mb-4 animate-fade-in">
+        <h1 class="feed-title">Explorar Projetos</h1>
+        <p class="feed-subtitle text-muted">Encontre as melhores solicitações de desenvolvimento de sistemas publicadas por empresas parceiras.</p>
+    </div>
 
-
-@if (SolicitacaoProjeto == null)
-{
-    @if (hasErrorAPI == true)
+    @if (SolicitacaoProjeto == null)
     {
-        <p><em>Ocorreu um erro, estamos trabalhando para ajustar (=</em></p>
+        @if (hasErrorAPI == true)
+        {
+            <div class="alert alert-danger-custom animate-fade-in" role="alert">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i> Ocorreu um erro ao carregar o feed. Nossa equipe técnica já foi alertada.
+            </div>
+        }
+        else
+        {
+            <div class="d-flex justify-content-center py-5">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+        }
     }
     else
     {
-        <p><em>Loading...</em></p>
+        @if (!SolicitacaoProjeto.Any())
+        {
+            <div class="no-projects-card text-center py-5 animate-fade-in">
+                <i class="bi bi-folder2-open no-projects-icon"></i>
+                <h3>Nenhum projeto disponível no momento</h3>
+                <p class="text-muted">Acompanhe esta página para visualizar novos projetos cadastrados em breve.</p>
+            </div>
+        }
+        else
+        {
+            <div class="row g-4 animate-fade-in">
+                @foreach (var solicitacaoProjeto in SolicitacaoProjeto)
+                {
+                    <div class="col-md-6 col-lg-4">
+                        <div class="project-feed-card h-100 d-flex flex-column justify-content-between">
+                            <div>
+                                <div class="project-category-badge mb-3">
+                                    <i class="bi bi-code-square me-1"></i> Desenvolvimento
+                                </div>
+                                <h3 class="project-card-title">@solicitacaoProjeto.Titulo</h3>
+                            </div>
+                            
+                            <div class="my-3">
+                                <div class="info-row d-flex align-items-center mb-2">
+                                    <span class="info-icon text-success me-2"><i class="bi bi-cash-stack"></i></span>
+                                    <span class="info-text">Orçamento: <strong class="text-dark">R$ @solicitacaoProjeto.Orçamento</strong></span>
+                                </div>
+                                <div class="info-row d-flex align-items-center">
+                                    <span class="info-icon text-danger me-2"><i class="bi bi-geo-alt-fill"></i></span>
+                                    <span class="info-text">Localização: <span class="text-secondary">@solicitacaoProjeto.Local</span></span>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <button type="button" class="btn btn-outline-purple w-100" @onclick="(() => OpenDetalhe(solicitacaoProjeto.Id))">
+                                    <span>Visualizar Vaga</span> <i class="bi bi-arrow-right ms-1"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
     }
+</div>
 
-    
+<style>
+/* Modern Feed Design */
+.feed-header {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    padding-bottom: 1rem;
 }
-else
-{
-    <table class="table">
-        <thead>
-            <tr style="background-color: #38598b; color:white">
-                <th>Projeto</th>
-                <th>Orçamento</th>
-                <th>Localização</th>
-                <th>Status</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var solicitacaoProjeto in SolicitacaoProjeto)
-            {
-                <tr>
-                    <td>@solicitacaoProjeto.Titulo</td>
-                    <td>@solicitacaoProjeto.Orçamento</td>
-                    <td>@solicitacaoProjeto.Local</td>
-                    @*<td>@forecast.Summary</td>*@
-                    <td> <button type="submit" class="btn btn-primary" @onclick="(() => OpenDetalhe(solicitacaoProjeto.Id))">Abrir</button></td>
-                </tr>
-            }
-        </tbody>
-    </table>
+
+.feed-title {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: #1a082e;
+    margin-bottom: 0.25rem;
 }
+
+.feed-subtitle {
+    font-size: 0.95rem;
+}
+
+/* CARDS design */
+.project-feed-card {
+    background: #ffffff;
+    border: 1px solid rgba(75, 27, 138, 0.06);
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.02);
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.project-feed-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(75, 27, 138, 0.07);
+    border-color: rgba(75, 27, 138, 0.16);
+}
+
+.project-category-badge {
+    display: inline-flex;
+    align-items: center;
+    background: rgba(118, 75, 162, 0.05);
+    color: #764ba2;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    border: 1px solid rgba(118, 75, 162, 0.1);
+}
+
+.project-card-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #2b233c;
+    line-height: 1.4;
+    margin: 0;
+}
+
+.info-row {
+    font-size: 0.9rem;
+}
+
+.info-icon {
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+}
+
+.info-text {
+    color: #695e78;
+}
+
+/* Purple Action Button outline style */
+.btn-outline-purple {
+    border: 1px solid #764ba2;
+    color: #764ba2 !important;
+    background: transparent;
+    padding: 9px;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: background 0.2s, color 0.2s;
+}
+
+.btn-outline-purple:hover {
+    background: #764ba2;
+    color: #ffffff !important;
+}
+
+/* Empty States */
+.no-projects-card {
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.02);
+}
+
+.no-projects-icon {
+    font-size: 3rem;
+    color: #a9a2b5;
+    margin-bottom: 1rem;
+    display: block;
+}
+
+.no-projects-card h3 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #2b233c;
+    margin-bottom: 0.5rem;
+}
+
+/* Animations */
+.animate-fade-in {
+    animation: fadeIn 0.4s ease-out;
+}
+
+@@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Custom error */
+.alert-danger-custom {
+    background-color: #fee2e2;
+    border: 1px solid #fecaca;
+    color: #b91c1c;
+    border-radius: 12px;
+    padding: 1rem;
+}
+</style>
 
 @code {
     private WeatherForecast[] forecasts;

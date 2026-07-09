@@ -1,22 +1,138 @@
 ﻿@inherits LayoutComponentBase
 
-<div class="login-layout">
-    <main>
-        @Body
-    </main>
+<div class="login-layout-container">
+    <div class="layout-left-panel">
+        <div class="brand-info-wrapper">
+            <div class="brand-logo-badge">
+                <i class="bi bi-briefcase-fill brand-badge-icon"></i>
+                <span class="brand-title">StudentFreela</span>
+            </div>
+            
+            <h1 class="main-tagline">Conectando Empresas e Talentos Universitários</h1>
+            
+            <p class="brand-description">
+                Plataforma que conecte empresas e universidades, possibilitando solicitações de desenvolvimento de sistemas a preços mais acessíveis e facilitando a requisição. Essa iniciativa não só pode reduzir custos e facilitar a requisição para as empresas, como também proporcionar mais oportunidades para estudantes universitários adquirirem experiência prática, aumentando suas chances de inserção no mercado de trabalho.
+            </p>
+        </div>
+    </div>
+    
+    <div class="layout-right-panel">
+        <div class="auth-card-holder">
+            @Body
+        </div>
+    </div>
 </div>
 
 <style>
-    /* Isso garante que o fundo cubra a tela toda */
-    .login-layout {
-        height: 100vh;
-        width: 100vw;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); /* Fundo Gradiente Roxo/Azul */
-        margin: 0;
-        padding: 0;
-        overflow: hidden;
+/* Split Layout Styling */
+.login-layout-container {
+    display: flex;
+    min-height: 100vh;
+    width: 100vw;
+    background: linear-gradient(135deg, #f5f2fa 0%, #e9e4f5 50%, #ded7f0 100%);
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+}
+
+.layout-left-panel {
+    flex: 1.2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2.5rem 2rem;
+    box-sizing: border-box;
+}
+
+.layout-right-panel {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem 1rem;
+    box-sizing: border-box;
+    background: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-left: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.brand-info-wrapper {
+    max-width: 520px;
+    text-align: left;
+}
+
+.brand-logo-badge {
+    display: inline-flex;
+    align-items: center;
+    background: rgba(75, 27, 138, 0.06);
+    border: 1px solid rgba(75, 27, 138, 0.12);
+    padding: 0.5rem 1.2rem;
+    border-radius: 50px;
+    margin-bottom: 2rem;
+}
+
+.brand-badge-icon {
+    font-size: 1.2rem;
+    color: #4b1b8a;
+    margin-right: 0.5rem;
+}
+
+.brand-title {
+    font-weight: 700;
+    color: #4b1b8a;
+    font-size: 1rem;
+    letter-spacing: 0.5px;
+}
+
+.main-tagline {
+    font-size: 2.5rem;
+    font-weight: 800;
+    line-height: 1.25;
+    color: #1a082e;
+    margin-bottom: 1.5rem;
+}
+
+.brand-description {
+    font-size: 1.05rem;
+    line-height: 1.7;
+    color: #453c52;
+    margin: 0;
+}
+
+.auth-card-holder {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+/* Responsiveness */
+@@media (max-width: 1150px) {
+    .login-layout-container {
+        flex-direction: column;
+        overflow-y: auto;
     }
+    
+    .layout-left-panel {
+        flex: none;
+        padding: 3rem 2rem 1.5rem 2rem;
+    }
+    
+    .layout-right-panel {
+        flex: 1;
+        padding: 1.5rem 2rem 3rem 2rem;
+        background: transparent;
+        border-left: none;
+        backdrop-filter: none;
+    }
+    
+    .main-tagline {
+        font-size: 2rem;
+    }
+    
+    .brand-description {
+        font-size: 0.95rem;
+    }
+}
 </style>

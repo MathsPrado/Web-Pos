@@ -1,9 +1,331 @@
 ﻿@page "/"
 @using Microsoft.AspNetCore.Authorization 
+@using System.Security.Claims
 @attribute [Authorize] 
+@inject NavigationManager NavManager
 
+<div class="dashboard-container">
+    <!-- Hero Welcomer -->
+    <div class="welcome-hero-card animate-fade-in">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <div class="welcome-badge">
+                    <i class="bi bi-stars me-2"></i> Área do Usuário
+                </div>
+                <h1 class="welcome-title">Olá! Seja muito bem-vindo ao <span class="brand-text">StudentFreela</span></h1>
+                <p class="welcome-desc">
+                    O ecossistema perfeito que conecta empresas ávidas por inovação a estudantes talentosos em busca de experiência prática e oportunidades no mercado de trabalho.
+                </p>
+                <div class="welcome-actions d-flex flex-wrap gap-3 mt-4">
+                    <button class="btn btn-primary-gradient" @onclick='() => NavManager.NavigateTo("/feed")'>
+                        <i class="bi bi-compass me-2"></i> Explorar Projetos
+                    </button>
+                    <button class="btn btn-secondary-outline" @onclick='() => NavManager.NavigateTo("/profile")'>
+                        <i class="bi bi-person-badge me-2"></i> Ver Meu Perfil
+                    </button>
+                </div>
+            </div>
+            <div class="col-lg-4 text-center d-none d-lg-block">
+                <div class="hero-illustration-wrapper">
+                    <i class="bi bi-laptop hero-main-icon"></i>
+                </div>
+            </div>
+        </div>
+    </div>
 
-<h1>Estudante Work</h1>
-<h6>Seja muito Bem-Vindo!</h6>
+    <!-- Quick Stats Grid -->
+    <div class="row mt-4 g-4">
+        <div class="col-md-4">
+            <div class="dashboard-stat-card card-purple-tint">
+                <div class="stat-card-header">
+                    <div class="stat-icon-wrapper">
+                        <i class="bi bi-file-earmark-code"></i>
+                    </div>
+                </div>
+                <div class="stat-card-body">
+                    <h3>Explorar Projetos</h3>
+                    <p>Encontre oportunidades publicadas por empresas parceiras e envie propostas.</p>
+                    <a href="feed" class="stat-card-link">Explorar <i class="bi bi-arrow-right ms-1"></i></a>
+                </div>
+            </div>
+        </div>
 
+        <div class="col-md-4">
+            <div class="dashboard-stat-card card-blue-tint">
+                <div class="stat-card-header">
+                    <div class="stat-icon-wrapper">
+                        <i class="bi bi-plus-circle"></i>
+                    </div>
+                </div>
+                <div class="stat-card-body">
+                    <h3>Publicar Projeto</h3>
+                    <p>É uma empresa? Cadastre uma solicitação de projeto para atrair talentos da universidade.</p>
+                    <a href="request-projeto" class="stat-card-link">Criar Projeto <i class="bi bi-arrow-right ms-1"></i></a>
+                </div>
+            </div>
+        </div>
 
+        <div class="col-md-4">
+            <div class="dashboard-stat-card card-violet-tint">
+                <div class="stat-card-header">
+                    <div class="stat-icon-wrapper">
+                        <i class="bi bi-person-lines-fill"></i>
+                    </div>
+                </div>
+                <div class="stat-card-body">
+                    <h3>Gerenciar Currículo</h3>
+                    <p>Atualize suas habilidades, experiências e portfólios no seu perfil profissional.</p>
+                    <a href="profile" class="stat-card-link">Editar Perfil <i class="bi bi-arrow-right ms-1"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Info Section -->
+    <div class="info-section-card mt-4">
+        <div class="info-badge mb-3">
+            <i class="bi bi-info-circle me-1"></i> Dica de Hoje
+        </div>
+        <h4>Como conseguir o seu primeiro freela?</h4>
+        <p class="mb-0 text-muted">
+            Mantenha seu perfil estruturado com as suas principais habilidades técnicas (Skills) e experiências acadêmicas. Empresas costumam filtrar candidatos baseados nos perfis mais completos e atualizados em nossa plataforma!
+        </p>
+    </div>
+</div>
+
+<style>
+/* Dashboard Styles */
+.dashboard-container {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+/* Hero Welcome Card */
+.welcome-hero-card {
+    background: linear-gradient(135deg, #1d072b 0%, #0c0214 100%);
+    color: #ffffff;
+    border-radius: 20px;
+    padding: 3rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.welcome-badge {
+    display: inline-flex;
+    align-items: center;
+    background: rgba(163, 112, 247, 0.15);
+    color: #c7a4ff;
+    padding: 6px 14px;
+    border-radius: 30px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    border: 1px solid rgba(163, 112, 247, 0.25);
+}
+
+.welcome-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    line-height: 1.25;
+    margin-bottom: 1rem;
+}
+
+.brand-text {
+    background: linear-gradient(135deg, #a370f7 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.welcome-desc {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: #c9c1db;
+    max-width: 720px;
+}
+
+/* Button Styling */
+.btn-primary-gradient {
+    background: linear-gradient(135deg, #a370f7 0%, #764ba2 100%);
+    color: #ffffff !important;
+    border: none;
+    padding: 10px 24px;
+    font-weight: 600;
+    border-radius: 8px;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 15px rgba(118, 75, 162, 0.4);
+}
+
+.btn-primary-gradient:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(118, 75, 162, 0.5);
+}
+
+.btn-secondary-outline {
+    background: transparent;
+    color: #ffffff !important;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    padding: 10px 24px;
+    font-weight: 600;
+    border-radius: 8px;
+    transition: background 0.2s, border-color 0.2s;
+}
+
+.btn-secondary-outline:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+/* Hero Illustration */
+.hero-illustration-wrapper {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 140px;
+    height: 140px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 50%;
+    position: relative;
+    box-shadow: inset 0 0 20px rgba(163, 112, 247, 0.1);
+}
+
+.hero-main-icon {
+    font-size: 4.5rem;
+    color: #a370f7;
+    filter: drop-shadow(0 0 15px rgba(163, 112, 247, 0.4));
+}
+
+/* Quick Stats Grid */
+.dashboard-stat-card {
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    border-radius: 16px;
+    padding: 2rem;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.03);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.dashboard-stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(118, 75, 162, 0.08);
+}
+
+.stat-icon-wrapper {
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    margin-bottom: 1.5rem;
+}
+
+/* Cards Colors Theme */
+.card-purple-tint .stat-icon-wrapper {
+    background: rgba(118, 75, 162, 0.06);
+    color: #764ba2;
+    border: 1px solid rgba(118, 75, 162, 0.12);
+}
+
+.card-blue-tint .stat-icon-wrapper {
+    background: rgba(13, 110, 253, 0.06);
+    color: #0d6efd;
+    border: 1px solid rgba(13, 110, 253, 0.12);
+}
+
+.card-violet-tint .stat-icon-wrapper {
+    background: rgba(163, 112, 247, 0.06);
+    color: #a370f7;
+    border: 1px solid rgba(163, 112, 247, 0.12);
+}
+
+.stat-card-body h3 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #2b233c;
+    margin-bottom: 0.75rem;
+}
+
+.stat-card-body p {
+    font-size: 0.925rem;
+    color: #695e78;
+    line-height: 1.5;
+    margin-bottom: 1.5rem;
+}
+
+.stat-card-link {
+    font-size: 0.925rem;
+    font-weight: 700;
+    color: #764ba2;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    transition: gap 0.2s;
+}
+
+.stat-card-link:hover {
+    color: #a370f7;
+}
+
+.card-purple-tint:hover .stat-card-link { color: #764ba2; }
+.card-blue-tint:hover .stat-card-link { color: #0d6efd; }
+.card-violet-tint:hover .stat-card-link { color: #a370f7; }
+
+/* Info Section Card */
+.info-section-card {
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.02);
+}
+
+.info-badge {
+    display: inline-flex;
+    align-items: center;
+    background: rgba(13, 110, 253, 0.06);
+    color: #0d6efd;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    border: 1px solid rgba(13, 110, 253, 0.1);
+}
+
+.info-section-card h4 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #2b233c;
+    margin-bottom: 0.5rem;
+}
+
+/* Responsiveness */
+@@media (max-width: 1150px) {
+    .dashboard-container {
+        padding: 1.5rem 1rem;
+    }
+}
+
+@@media (max-width: 768px) {
+    .dashboard-container {
+        padding: 1rem;
+    }
+    
+    .welcome-hero-card {
+        padding: 2rem;
+    }
+    
+    .welcome-title {
+        font-size: 1.85rem;
+    }
+}
+</style>

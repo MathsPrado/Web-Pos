@@ -27,12 +27,26 @@
         </div>
 
         <div class="form-group mb-2">
-            <label class="form-label">Sobrenome</label>
+            <label class="form-label">Tipo de Perfil</label>
             <div class="input-group">
-                <span class="input-group-text"><i class="bi bi-person"></i></span>
-                <input class="form-control" @bind="registerRequest.Sobrenome" placeholder="Digite seu sobrenome" />
+                <span class="input-group-text"><i class="bi bi-people-fill"></i></span>
+                <select class="form-control" @bind="registerRequest.Role" style="background-color: white;">
+                    <option value="User">Estudante (Freelancer)</option>
+                    <option value="Company">Empresa Parceira</option>
+                </select>
             </div>
         </div>
+
+        @if (registerRequest.Role != "Company")
+        {
+            <div class="form-group mb-2">
+                <label class="form-label">Sobrenome</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-person"></i></span>
+                    <input class="form-control" @bind="registerRequest.Sobrenome" placeholder="Digite seu sobrenome" />
+                </div>
+            </div>
+        }
 
         <div class="form-group mb-2">
             <label class="form-label">E-mail</label>
@@ -253,7 +267,7 @@
     private async Task HandleRegister()
     {
         if (string.IsNullOrWhiteSpace(registerRequest.Nome) ||
-            string.IsNullOrWhiteSpace(registerRequest.Sobrenome) ||
+            (registerRequest.Role != "Company" && string.IsNullOrWhiteSpace(registerRequest.Sobrenome)) ||
             string.IsNullOrWhiteSpace(registerRequest.Email) ||
             string.IsNullOrWhiteSpace(registerRequest.Password))
         {

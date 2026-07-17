@@ -1,0 +1,549 @@
+@page "/company-profile"
+@attribute [Microsoft.AspNetCore.Authorization.Authorize]
+@using Student.Web.Model
+@using Student.Web.Service
+@using System.Security.Claims
+@inject PerfilEmpresaService EmpresaService
+@inject AuthenticationStateProvider AuthStateProvider
+@inject NavigationManager NavManager
+
+<div class="company-profile-container">
+    @if (company == null)
+    {
+        <div class="loading-state">
+            <div class="spinner-border text-primary" role="status"></div>
+            <p class="mt-2">Carregando dados da empresa...</p>
+        </div>
+    }
+    else
+    {
+        <div class="profile-header-card">
+            <div class="profile-header-gradient"></div>
+            <div class="profile-avatar-row">
+                <div class="company-avatar">
+                    <i class="bi bi-building"></i>
+                </div>
+                <div class="company-basic-info">
+                    <h2 class="company-name">@company.Nome</h2>
+                    <span class="badge badge-industry"><i class="bi bi-tag-fill me-1"></i> @company.Segmento</span>
+                    <span class="badge badge-email"><i class="bi bi-envelope-fill me-1"></i> @company.Email</span>
+                </div>
+                <div class="ms-auto pe-3">
+                    <button class="btn btn-premium-edit" @onclick="ToggleEditMode">
+                        @if (isEditing)
+                        {
+                            <span><i class="bi bi-x-circle me-1"></i> Cancelar</span>
+                        }
+                        else
+                        {
+                            <span><i class="bi bi-pencil-fill me-1"></i> Editar Perfil</span>
+                        }
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-md-4">
+                <div class="profile-info-sidebar">
+                    @if (isEditing)
+                    {
+                        <h4 class="section-title">Editar Informações</h4>
+                        <div class="edit-form">
+                            <div class="mb-3">
+                                <label class="form-label">Nome/Razão Social</label>
+                                <input class="form-control" @bind="editModel.Nome" />
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Telefone</label>
+                                <input class="form-control" @bind="editModel.Telefone" />
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Segmento/Setor</label>
+                                <input class="form-control" @bind="editModel.Segmento" />
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Site Oficial</label>
+                                <input class="form-control" @bind="editModel.Site" />
+                            </div>
+                            <button class="btn btn-save" @onclick="SaveChanges" disabled="@isSaving">
+                                @if (isSaving)
+                                {
+                                    <span>Salvando...</span>
+                                }
+                                else
+                                {
+                                    <span>Salvar Alterações</span>
+                                }
+                            </button>
+                        </div>
+                    }
+                    else
+                    {
+                        <h4 class="section-title">Informações Comerciais</h4>
+                        <ul class="info-list">
+                            <li>
+                                <div class="info-label">Setor / Segmento</div>
+                                <div class="info-value">@company.Segmento</div>
+                            </li>
+                            <li>
+                                <div class="info-label">Telefone de Contato</div>
+                                <div class="info-value">@(string.IsNullOrEmpty(company.Telefone) ? "Não informado" : company.Telefone)</div>
+                            </li>
+                            <li>
+                                <div class="info-label">Site Oficial</div>
+                                <div class="info-value">
+                                    @if (!string.IsNullOrEmpty(company.Site) && company.Site != "http://...")
+                                    {
+                                        <a href="@company.Site" target="_blank" class="company-link">
+                                            <i class="bi bi-globe me-1"></i> Visitar Website
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <span>Não informado</span>
+                                    }
+                                </div>
+                            </li>
+                        </ul>
+                    }
+                </div>
+            </div>
+
+            <div class="col-md-8">
+                <div class="profile-main-content">
+                    <div class="content-card mb-4">
+                        <h4 class="section-title mb-3">Sobre a Empresa</h4>
+                        @if (isEditing)
+                        {
+                            <textarea class="form-control text-area-large" @bind="editModel.Sobre" placeholder="Conte mais sobre a história e valores da empresa..."></textarea>
+                        }
+                        else
+                        {
+                            <p class="about-text">@company.Sobre</p>
+                        }
+                    </div>
+
+                    <div class="content-card">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h4 class="section-title mb-0">Nossos Projetos Abertos</h4>
+                            <button class="btn btn-new-project" @onclick="NavigateToNewProject">
+                                <i class="bi bi-plus-circle me-1"></i> Nova Solicitação
+                            </button>
+                        </div>
+
+                        @if (company.ProjetosAbertos == null || company.ProjetosAbertos.Count == 0)
+                        {
+                            <div class="empty-projects-state">
+                                <i class="bi bi-clipboard-x projects-empty-icon"></i>
+                                <p>Sua empresa ainda não possui nenhuma solicitação de projeto aberta.</p>
+                                <button class="btn btn-outline-primary btn-sm mt-2" @onclick="NavigateToNewProject">
+                                    Criar Primeira Solicitação
+                                </button>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="projects-list">
+                                @foreach (var proj in company.ProjetosAbertos)
+                                {
+                                    <div class="project-item-card">
+                                        <div class="project-item-header">
+                                            <h5 class="project-item-title">@proj.Titulo</h5>
+                                            <span class="project-budget">@proj.Orçamento</span>
+                                        </div>
+                                        <p class="project-item-desc">@proj.Descricao</p>
+                                        <div class="project-item-meta">
+                                            <span><i class="bi bi-geo-alt-fill me-1"></i> @proj.Local</span>
+                                            <span class="ms-3"><i class="bi bi-calendar-event me-1"></i> Ativo</span>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<style>
+/* Gradient and Profile Styling */
+.company-profile-container {
+    max-width: 1100px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+.profile-header-card {
+    background: #ffffff;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    position: relative;
+}
+
+.profile-header-gradient {
+    height: 120px;
+    background: linear-gradient(135deg, #6c5ce7 0%, #a29bfe 100%);
+}
+
+.profile-avatar-row {
+    display: flex;
+    align-items: center;
+    padding: 1.5rem 2rem;
+    margin-top: -50px;
+    position: relative;
+    z-index: 2;
+}
+
+.company-avatar {
+    width: 100px;
+    height: 100px;
+    background: #ffffff;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    color: #6c5ce7;
+    box-shadow: 0 8px 24px rgba(108, 92, 231, 0.15);
+    border: 4px solid #ffffff;
+}
+
+.company-basic-info {
+    margin-left: 1.5rem;
+    margin-top: 30px;
+}
+
+.company-name {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #2d3748;
+    margin-bottom: 0.25rem;
+}
+
+.badge-industry {
+    background: rgba(108, 92, 231, 0.1);
+    color: #6c5ce7;
+    padding: 0.4rem 0.8rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border-radius: 30px;
+    margin-right: 0.5rem;
+}
+
+.badge-email {
+    background: rgba(74, 85, 104, 0.1);
+    color: #4a5568;
+    padding: 0.4rem 0.8rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border-radius: 30px;
+}
+
+.btn-premium-edit {
+    background: #ffffff;
+    border: 1px solid #d2d6dc;
+    color: #4a5568;
+    font-weight: 600;
+    font-size: 0.9rem;
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    transition: all 0.2s;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+
+.btn-premium-edit:hover {
+    background: #f7fafc;
+    border-color: #cbd5e0;
+    color: #2d3748;
+}
+
+/* Sidebar Info Card */
+.profile-info-sidebar {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.section-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #2d3748;
+    border-left: 4px solid #6c5ce7;
+    padding-left: 0.75rem;
+    margin-bottom: 1.25rem;
+}
+
+.info-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.info-list li {
+    margin-bottom: 1.25rem;
+}
+
+.info-list li:last-child {
+    margin-bottom: 0;
+}
+
+.info-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: #a0aec0;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.2rem;
+}
+
+.info-value {
+    font-size: 0.95rem;
+    color: #2d3748;
+    font-weight: 500;
+}
+
+.company-link {
+    color: #6c5ce7;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.2s;
+}
+
+.company-link:hover {
+    color: #4834d4;
+    text-decoration: underline;
+}
+
+/* Content Area */
+.profile-main-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.content-card {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 1.8rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.about-text {
+    font-size: 0.98rem;
+    line-height: 1.6;
+    color: #4a5568;
+    white-space: pre-line;
+}
+
+/* Form Styles */
+.edit-form .form-label {
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: #4a5568;
+}
+
+.edit-form .form-control {
+    border-radius: 8px;
+    font-size: 0.9rem;
+    border: 1px solid #d2d6dc;
+    padding: 0.5rem 0.75rem;
+}
+
+.text-area-large {
+    min-height: 120px;
+    border-radius: 8px;
+    border: 1px solid #d2d6dc;
+    font-size: 0.9rem;
+}
+
+.btn-save {
+    background: #6c5ce7;
+    color: #ffffff;
+    font-weight: 700;
+    border: none;
+    width: 100%;
+    padding: 0.6rem;
+    border-radius: 8px;
+    transition: opacity 0.2s;
+}
+
+.btn-save:hover {
+    opacity: 0.95;
+}
+
+/* Open Projects Styles */
+.btn-new-project {
+    background: rgba(108, 92, 231, 0.1);
+    color: #6c5ce7;
+    font-weight: 700;
+    border: none;
+    font-size: 0.85rem;
+    padding: 0.4rem 0.8rem;
+    border-radius: 6px;
+    transition: all 0.2s;
+}
+
+.btn-new-project:hover {
+    background: #6c5ce7;
+    color: #ffffff;
+}
+
+.empty-projects-state {
+    text-align: center;
+    padding: 2.5rem 1rem;
+    color: #718096;
+}
+
+.projects-empty-icon {
+    font-size: 3rem;
+    color: #cbd5e0;
+    display: block;
+    margin-bottom: 0.75rem;
+}
+
+.projects-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.project-item-card {
+    background: #f7fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 1.25rem;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.project-item-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.project-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.project-item-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #2d3748;
+    margin: 0;
+}
+
+.project-budget {
+    font-weight: 700;
+    color: #48bb78;
+    font-size: 1rem;
+}
+
+.project-item-desc {
+    font-size: 0.9rem;
+    color: #718096;
+    margin-bottom: 0.75rem;
+    line-height: 1.5;
+}
+
+.project-item-meta {
+    font-size: 0.8rem;
+    color: #a0aec0;
+    font-weight: 500;
+}
+</style>
+
+@code {
+    private PerfilEmpresa company;
+    private PerfilEmpresa editModel = new();
+    private bool isEditing = false;
+    private bool isSaving = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadCompanyProfile();
+    }
+
+    private async Task LoadCompanyProfile()
+    {
+        try
+        {
+            var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+
+            if (user.Identity is not null && user.Identity.IsAuthenticated)
+            {
+                var email = user.FindFirst(ClaimTypes.Email)?.Value 
+                            ?? user.FindFirst(ClaimTypes.Name)?.Value;
+
+                if (!string.IsNullOrEmpty(email))
+                {
+                    company = await EmpresaService.GetCompanyByEmailAsync(email);
+                    if (company != null)
+                    {
+                        editModel = new PerfilEmpresa
+                        {
+                            Id = company.Id,
+                            Nome = company.Nome,
+                            Email = company.Email,
+                            Telefone = company.Telefone,
+                            Sobre = company.Sobre,
+                            Segmento = company.Segmento,
+                            Site = company.Site,
+                            PasswordHash = company.PasswordHash
+                        };
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Erro ao carregar perfil da empresa: {ex.Message}");
+        }
+    }
+
+    private void ToggleEditMode()
+    {
+        isEditing = !isEditing;
+    }
+
+    private async Task SaveChanges()
+    {
+        if (string.IsNullOrWhiteSpace(editModel.Nome))
+            return;
+
+        isSaving = true;
+        try
+        {
+            var updated = await EmpresaService.Update(editModel);
+            if (updated != null)
+            {
+                company = updated;
+                isEditing = false;
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Erro ao salvar alterações da empresa: {ex.Message}");
+        }
+        finally
+        {
+            isSaving = false;
+        }
+    }
+
+    private void NavigateToNewProject()
+    {
+        NavManager.NavigateTo("RequestProjeto");
+    }
+}

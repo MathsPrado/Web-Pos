@@ -1,7 +1,10 @@
 ﻿@page "/RequestProjeto"
 @using Student.Web.Model
 @using Student.Web.Service
+@using System.Security.Claims
 @inject SolicitacaoProjectServer solicitacaoProjectServer;
+@inject PerfilEmpresaService EmpresaService
+@inject AuthenticationStateProvider AuthStateProvider
 @inject IJSRuntime JsRuntime
 @inject NavigationManager uriHelper;
 @attribute [Authorize]
@@ -80,20 +83,39 @@
 
     //}
 
-    private async void HandleValidSubmit()
+    private async Task HandleValidSubmit()
     {
         if(solicitacaoProjeto.Descricao == "" || solicitacaoProjeto.Orçamento == "" || solicitacaoProjeto.Local == "" || solicitacaoProjeto.Titulo == "")
         {
             await JsRuntime.InvokeVoidAsync("alert", "Preencher todos os campos"); // Alert
             return;
         }
+
+        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        var role = user.FindFirst("role")?.Value ?? user.FindFirst(ClaimTypes.Role)?.Value;
+
+        if (string.Equals(role, "Company", StringComparison.OrdinalIgnoreCase))
+        {
+            var email = user.FindFirst(ClaimTypes.Email)?.Value 
+                        ?? user.FindFirst(ClaimTypes.Name)?.Value;
+            if (!string.IsNullOrEmpty(email))
+            {
+                var company = await EmpresaService.GetCompanyByEmailAsync(email);
+                if (company != null)
+                {
+                    solicitacaoProjeto.PerfilEmpresaId = company.Id;
+                }
+            }
+        }
+
         editContext = new EditContext(solicitacaoProjeto);
         solicitacaoProjeto.DataFim = dateEnd;
         solicitacaoProjeto.DataInicio = dateStart;
         var result = await solicitacaoProjectServer.Create(solicitacaoProjeto);
         if(result == "OK"){
             await JsRuntime.InvokeVoidAsync("alert", "Salvo com sucesso!"); // Alert
-                              uriHelper.NavigateTo(uriHelper.Uri, forceLoad: true);  
+                               uriHelper.NavigateTo(uriHelper.Uri, forceLoad: true);  
         }
         else
             await JsRuntime.InvokeVoidAsync("alert", "Erro:"+result); // Alert

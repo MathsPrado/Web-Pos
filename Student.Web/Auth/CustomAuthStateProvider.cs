@@ -15,6 +15,7 @@ public class CustomAuthStateProvider : AuthenticationStateProvider
 {
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly HttpClient _http;
+    private ClaimsPrincipal _currentUser = new ClaimsPrincipal(new ClaimsIdentity());
 
     // Removemos LocalStorage e injetamos HttpContextAccessor
     public CustomAuthStateProvider(IHttpContextAccessor httpContextAccessor, HttpClient http)
@@ -25,6 +26,11 @@ public class CustomAuthStateProvider : AuthenticationStateProvider
 
     public override Task<AuthenticationState> GetAuthenticationStateAsync()
     {
+        if (_currentUser.Identity?.IsAuthenticated == true)
+        {
+            return Task.FromResult(new AuthenticationState(_currentUser));
+        }
+
         string token = null;
 
         if (_httpContextAccessor.HttpContext?.Request?.Cookies.TryGetValue("authToken", out var cookieToken) == true)
@@ -42,23 +48,25 @@ public class CustomAuthStateProvider : AuthenticationStateProvider
         _http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
         var identity = new ClaimsIdentity(ParseClaimsFromJwt(token), "jwt");
-        var user = new ClaimsPrincipal(identity);
+        _currentUser = new ClaimsPrincipal(identity);
 
-        return Task.FromResult(new AuthenticationState(user));
+        return Task.FromResult(new AuthenticationState(_currentUser));
     }
 
     // Métodos NotifyUserLogin, NotifyUserLogout e ParseClaims (mantém iguais)
     public void NotifyUserLogin(string token)
     {
-        var authenticatedUser = new ClaimsPrincipal(new ClaimsIdentity(ParseClaimsFromJwt(token), "jwt"));
-        var authState = Task.FromResult(new AuthenticationState(authenticatedUser));
+        _currentUser = new ClaimsPrincipal(new ClaimsIdentity(ParseClaimsFromJwt(token), "jwt"));
+        _http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        var authState = Task.FromResult(new AuthenticationState(_currentUser));
         NotifyAuthenticationStateChanged(authState);
     }
 
     public void NotifyUserLogout()
     {
-        var anonymousUser = new ClaimsPrincipal(new ClaimsIdentity());
-        var authState = Task.FromResult(new AuthenticationState(anonymousUser));
+        _currentUser = new ClaimsPrincipal(new ClaimsIdentity());
+        _http.DefaultRequestHeaders.Authorization = null;
+        var authState = Task.FromResult(new AuthenticationState(_currentUser));
         NotifyAuthenticationStateChanged(authState);
     }
 

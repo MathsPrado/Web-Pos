@@ -71,11 +71,13 @@ public class AuthService : IAuthService
     public async Task<bool> Register(RegisterRequest registerRequest)
     {
         var urlRegister = "https://localhost:44303/api/Auth/register";
+        var isCompany = string.Equals(registerRequest.Role, "Company", StringComparison.OrdinalIgnoreCase);
+
         var authPayload = new
         {
             Username = registerRequest.Email,
             Password = registerRequest.Password,
-            InitialRole = "User"
+            InitialRole = isCompany ? "Company" : "User"
         };
 
         try
@@ -91,21 +93,28 @@ public class AuthService : IAuthService
                 return false;
 
             // Criar perfil na API de Estudante
-            var urlProfile = "http://localhost:46497/api/ProfileUser";
+            var urlProfile = isCompany ? "http://localhost:46497/api/PerfilEmpresa" : "http://localhost:46497/api/ProfileUser";
             var profilePayload = new
             {
                 Nome = registerRequest.Nome,
-                Sobrenome = registerRequest.Sobrenome,
                 Email = registerRequest.Email,
+                // Empresa ou Estudante
+                // Se for empresa, passamos Sobrenome vazio, se for estudante, passamos normal.
+                // Na API de PerfilEmpresa não tem Sobrenome, mas o serializador ignora ou podemos mandar uma propriedade dinâmica:
+                Sobrenome = isCompany ? "" : registerRequest.Sobrenome,
+                Telefone = "",
+                Sobre = isCompany ? "Sobre a empresa..." : "",
+                Segmento = isCompany ? "Segmento..." : "",
+                Site = isCompany ? "http://..." : "",
                 PasswordHash = registerRequest.Password
             };
 
             using (var profileClient = new HttpClient())
             {
-                var profileResult = await profileClient.PostAsJsonAsync(urlProfile, profilePayload);
+                var profileResult = await profileClient.PostAsJsonAsync(urlProfile, (object)profilePayload);
                 if (!profileResult.IsSuccessStatusCode)
                 {
-                    Console.WriteLine($"Aviso: Erro ao criar perfil do estudante no Student.API: {profileResult.StatusCode}");
+                    Console.WriteLine($"Aviso: Erro ao criar perfil no Student.API: {profileResult.StatusCode}");
                 }
             }
 

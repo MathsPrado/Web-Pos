@@ -1,5 +1,7 @@
 ﻿@inject MeuProjetoBlazor.Services.IAuthService AuthService
 @inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthStateProvider
+@using System.Security.Claims
 
 <nav class="navbar navbar-expand-md navbar-dark bg-dark-custom sticky-top shadow-sm">
     <div class="container-fluid">
@@ -24,7 +26,7 @@
                     </NavLink>
                 </li>
                 <li class="nav-item">
-                    <NavLink class="nav-link" href="profile">
+                    <NavLink class="nav-link" href="@profileLink">
                         <i class="bi bi-person-fill-gear me-1"></i> Perfil
                     </NavLink>
                 </li>
@@ -50,10 +52,25 @@
 
 @code {
     private bool collapseNavMenu = true;
+    private string profileLink = "profile";
 
     private void ToggleNavMenu()
     {
         collapseNavMenu = !collapseNavMenu;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        if (user.Identity is not null && user.Identity.IsAuthenticated)
+        {
+            var role = user.FindFirst("role")?.Value ?? user.FindFirst(ClaimTypes.Role)?.Value;
+            if (string.Equals(role, "Company", StringComparison.OrdinalIgnoreCase))
+            {
+                profileLink = "company-profile";
+            }
+        }
     }
 
     private async Task HandleLogout()

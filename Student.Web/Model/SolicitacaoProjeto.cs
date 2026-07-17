@@ -15,7 +15,6 @@ namespace Student.Web.Model
         public string Local { get; set; }
         public List<String> ListaConhecimentos { get; set; }
         public string Descricao { get; set; }
-
-
+        public int? PerfilEmpresaId { get; set; }
     }
 }

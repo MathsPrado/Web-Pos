@@ -1,22 +1,77 @@
-# Web-Pos
+# StudentFreela - Frontend (Student.Web)
 
-Frontend utilizado em https://github.com/MathsPrado/API-Pos (API)
+Este repositório contém a aplicação frontend **StudentFreela**, uma plataforma web desenvolvida em Blazor Server para conectar os estudantes da instituição de ensino com oportunidades de trabalho e freelancer sob demanda oferecidas por empresas parceiras.
 
-## Principais Tecnologias
+A API correspondente de regras de negócio pode ser encontrada no repositório [API-Pos](https://github.com/MathsPrado/API-Pos).
 
-- **Blazor WebAssembly**: Framework .NET para construir interfaces de usuário interativas no lado do cliente com C#.
-- **.NET 5**: Plataforma para construir e hospedar a aplicação Blazor.
-- **HTML/CSS/JavaScript**: Tecnologias web padrão para estrutura, estilo e interatividade.
+---
 
-## Pré-requisitos
+## 🏗️ Arquitetura do Sistema
 
-- **[.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0](https://dotnet.microsoft.com/en-us/download/dotnet/10.0))**: Necessário para construir e executar a aplicação Blazor.
-- **[Um navegador moderno](https://browsehappy.com/)**: Como Chrome, Firefox, Edge, ou Safari.
-- **A API de Backend em execução**: O frontend espera se comunicar com a API em https://github.com/MathsPrado/API-Pos.
+A aplicação está integrada com a arquitetura geral da plataforma, que conta com três peças-chave em execução paralela:
 
-## Instalação
+```mermaid
+graph TD
+    A[Student.Web - Frontend <br> Port 5000] -->|Autenticação & Contas| B[MyAuth.API - Controle de Acesso <br> Port 44303]
+    A -->|Regras de Negócio & Perfis| C[Student.API - Core API <br> Port 46497]
+    C -->|Persistência| D[(SQL Server Database)]
+```
 
-1. Clone o repositório do frontend:
+- **Student.Web (Porta 5000)**: Servidor Blazor com interface moderna e rica. Seus cookies de credenciais (`authToken`) são armazenados e resguardados localmente e gerenciados via in-memory caching pelo `CustomAuthStateProvider`.
+- **MyAuth.API (Porta 44303)**: Microsserviço de Identidade que emite tokens JWT seguros.
+- **Student.API (Porta 46497)**: Servidor REST Core que faz o mapeamento relacional das classes via EF Core e interage com o banco de dados.
+
+---
+
+## ⚡ Principais Funcionalidades
+
+### 🏢 Perfil Comercial de Empresa
+- **Cadastro Multi-Role**: Ao criar uma nova conta na plataforma, você pode selecionar se deseja se registrar como **Estudante (Freelancer)** ou **Empresa Parceira**.
+- **Painel de Perfil**: Visualização premium das métricas de perfil (segmento/setor, descrição da empresa, site oficial em link hipertext).
+- **Lista de Projetos Ativos**: Visualização em tempo real de todas as solicitações de projetos criadas por este perfil corporativo.
+- **Edição Inline**: Edição rápida por meio de cards interativos integrados diretamente à página do perfil.
+
+### 🎓 Perfil de Estudante / Freelancer
+- **Habilidades & Competências**: Vinculação visual de Tags dinâmicas de Skills.
+- **Experiência Profissional**: Histórico de trabalhos e graduações estruturados em linha do tempo na lateral do dashboard do estudante.
+
+### 📝 Solicitação e Feed de Projetos
+- **Publicação**: Painel dinâmico `/RequestProjeto` permitindo preencher detalhes como título, descrição do projeto, orçamento planejado e localidade.
+- **Associação Automática**: A plataforma infere se o usuário autenticado é uma Empresa Parceira para persistir e vincular diretamente a solicitação de projeto ao ID correto no banco SQL Server.
+- **Feed**: Exibição estruturada com status das candidaturas de estudantes e inscrições ativas.
+
+---
+
+## 💻 Tecnologias Empregadas
+
+- **Blazor Server** (ASP.NET Core no **.NET 10.0**)
+- **Estilização Premium**: Custom CSS e HTML5 semântico com grids fluídos e responsivos.
+- **Interface e Elementos**: Biblioteca de ícones interativos Bootstrap Icons.
+- **Segurança**: Cookie Caching System para segurança de transporte de Token no ciclo de vida de WebSocket Circuits de aplicações Blazor SPA.
+
+---
+
+## 🚀 Instalação e Execução Local
+
+### Pré-requisitos
+- Instalar o [.NET 10 SDK](https://dotnet.microsoft.com/download) em sua máquina de build.
+- Certificar-se de ter os backends `MyAuth.API` e `Student.API` configurados e em execução.
+
+### Passos para Inicialização
+1. Abra o Terminal no diretório raiz do projeto:
    ```bash
-   git clone [https://github.com/MathsPrado/Web-Pos.git](https://github.com/MathsPrado/Web-Pos.git)
    cd Web-Pos
+   ```
+2. Restaure as dependências do Blazor Server:
+   ```bash
+   dotnet restore
+   ```
+3. Construa a aplicação frontend:
+   ```bash
+   dotnet build
+   ```
+4. Execute utilizando o launch settings padrão:
+   ```bash
+   dotnet run --project Student.Web/Student.Web.csproj --launch-profile Student.Web
+   ```
+   A aplicação Blazor ficará acessível via HTTP em `http://localhost:5000`.

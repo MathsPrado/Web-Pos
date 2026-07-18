@@ -471,6 +471,17 @@
 
     protected override async Task OnInitializedAsync()
     {
+        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        if (user.Identity is not null && user.Identity.IsAuthenticated)
+        {
+            var role = user.FindFirst("role")?.Value ?? user.FindFirst(ClaimTypes.Role)?.Value;
+            if (!string.Equals(role, "Company", StringComparison.OrdinalIgnoreCase))
+            {
+                NavManager.NavigateTo("profile");
+                return;
+            }
+        }
         await LoadCompanyProfile();
     }
 

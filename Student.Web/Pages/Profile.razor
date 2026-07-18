@@ -6,6 +6,7 @@
 @inject IJSRuntime JsRuntime  
 @inject PerfilUserService perfilUserService;
 @inject AuthenticationStateProvider AuthStateProvider
+@inject NavigationManager NavigationManager
 @if (perfilUser != null)
 {
 <h1>Profile</h1>
@@ -475,7 +476,6 @@ else
 
     private PerfilUser perfilUser = new PerfilUser();
     int a = 0;
-
     protected override async Task OnInitializedAsync()
     {
         System.Console.WriteLine("[DIAG RAZOR] OnInitializedAsync started");
@@ -486,6 +486,13 @@ else
             System.Console.WriteLine($"[DIAG RAZOR] User Identity: {user?.Identity?.Name}, IsAuthenticated: {user?.Identity?.IsAuthenticated}");
             if (user.Identity is not null && user.Identity.IsAuthenticated)
             {
+                var role = user.FindFirst("role")?.Value ?? user.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value;
+                if (string.Equals(role, "Company", StringComparison.OrdinalIgnoreCase))
+                {
+                    NavigationManager.NavigateTo("company-profile");
+                    return;
+                }
+
                 var email = user.FindFirst(System.Security.Claims.ClaimTypes.Name)?.Value 
                             ?? user.FindFirst("unique_name")?.Value 
                             ?? user.FindFirst("email")?.Value 

@@ -26,9 +26,27 @@
                     </NavLink>
                 </li>
                 <li class="nav-item">
-                    <NavLink class="nav-link" href="@profileLink">
-                        <i class="bi bi-person-fill-gear me-1"></i> Perfil
-                    </NavLink>
+                    <AuthorizeView>
+                        <Authorized>
+                            @if (context.User.IsInRole("Company") || context.User.HasClaim(c => c.Type == "role" && c.Value == "Company"))
+                            {
+                                <NavLink class="nav-link" href="company-profile">
+                                    <i class="bi bi-person-fill-gear me-1"></i> Perfil
+                                </NavLink>
+                            }
+                            else
+                            {
+                                <NavLink class="nav-link" href="profile">
+                                    <i class="bi bi-person-fill-gear me-1"></i> Perfil
+                                </NavLink>
+                            }
+                        </Authorized>
+                        <NotAuthorized>
+                            <NavLink class="nav-link" href="profile">
+                                <i class="bi bi-person-fill-gear me-1"></i> Perfil
+                            </NavLink>
+                        </NotAuthorized>
+                    </AuthorizeView>
                 </li>
                 <li class="nav-item">
                     <NavLink class="nav-link" href="RequestProjeto">

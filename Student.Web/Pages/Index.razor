@@ -3,6 +3,7 @@
 @using System.Security.Claims
 @attribute [Authorize] 
 @inject NavigationManager NavManager
+@inject AuthenticationStateProvider AuthStateProvider
 
 <div class="dashboard-container">
     <!-- Hero Welcomer -->
@@ -35,50 +36,85 @@
 
     <!-- Quick Stats Grid -->
     <div class="row mt-4 g-4">
-        <div class="col-md-4">
-            <div class="dashboard-stat-card card-purple-tint">
-                <div class="stat-card-header">
-                    <div class="stat-icon-wrapper">
-                        <i class="bi bi-file-earmark-code"></i>
+        @if (isCompany)
+        {
+            <div class="col-md-4">
+                <div class="dashboard-stat-card card-purple-tint">
+                    <div class="stat-card-header">
+                        <div class="stat-icon-wrapper">
+                            <i class="bi bi-file-earmark-code"></i>
+                        </div>
+                    </div>
+                    <div class="stat-card-body">
+                        <h3>Explorar Projetos</h3>
+                        <p>Visualize as solicitações de projetos ativas da plataforma.</p>
+                        <a href="feed" class="stat-card-link">Explorar <i class="bi bi-arrow-right ms-1"></i></a>
                     </div>
                 </div>
-                <div class="stat-card-body">
-                    <h3>Explorar Projetos</h3>
-                    <p>Encontre oportunidades publicadas por empresas parceiras e envie propostas.</p>
-                    <a href="feed" class="stat-card-link">Explorar <i class="bi bi-arrow-right ms-1"></i></a>
-                </div>
             </div>
-        </div>
 
-        <div class="col-md-4">
-            <div class="dashboard-stat-card card-blue-tint">
-                <div class="stat-card-header">
-                    <div class="stat-icon-wrapper">
-                        <i class="bi bi-plus-circle"></i>
+            <div class="col-md-4">
+                <div class="dashboard-stat-card card-blue-tint">
+                    <div class="stat-card-header">
+                        <div class="stat-icon-wrapper">
+                            <i class="bi bi-plus-circle"></i>
+                        </div>
+                    </div>
+                    <div class="stat-card-body">
+                        <h3>Publicar Projeto</h3>
+                        <p>Cadastre uma solicitação de projeto para atrair talentos da universidade.</p>
+                        <a href="RequestProjeto" class="stat-card-link">Criar Projeto <i class="bi bi-arrow-right ms-1"></i></a>
                     </div>
                 </div>
-                <div class="stat-card-body">
-                    <h3>Publicar Projeto</h3>
-                    <p>É uma empresa? Cadastre uma solicitação de projeto para atrair talentos da universidade.</p>
-                    <a href="RequestProjeto" class="stat-card-link">Criar Projeto <i class="bi bi-arrow-right ms-1"></i></a>
-                </div>
             </div>
-        </div>
 
-        <div class="col-md-4">
-            <div class="dashboard-stat-card card-violet-tint">
-                <div class="stat-card-header">
-                    <div class="stat-icon-wrapper">
-                        <i class="bi bi-person-lines-fill"></i>
+            <div class="col-md-4">
+                <div class="dashboard-stat-card card-violet-tint">
+                    <div class="stat-card-header">
+                        <div class="stat-icon-wrapper">
+                            <i class="bi bi-building"></i>
+                        </div>
+                    </div>
+                    <div class="stat-card-body">
+                        <h3>Perfil da Empresa</h3>
+                        <p>Atualize as informações comerciais, contatos e descrição da sua empresa.</p>
+                        <a href="company-profile" class="stat-card-link">Editar Perfil <i class="bi bi-arrow-right ms-1"></i></a>
                     </div>
                 </div>
-                <div class="stat-card-body">
-                    <h3>Gerenciar Currículo</h3>
-                    <p>Atualize suas habilidades, experiências e portfólios no seu perfil profissional.</p>
-                    <a href="profile" class="stat-card-link">Editar Perfil <i class="bi bi-arrow-right ms-1"></i></a>
+            </div>
+        }
+        else
+        {
+            <div class="col-md-6">
+                <div class="dashboard-stat-card card-purple-tint">
+                    <div class="stat-card-header">
+                        <div class="stat-icon-wrapper">
+                            <i class="bi bi-file-earmark-code"></i>
+                        </div>
+                    </div>
+                    <div class="stat-card-body">
+                        <h3>Explorar Projetos</h3>
+                        <p>Encontre oportunidades publicadas por empresas parceiras e envie propostas.</p>
+                        <a href="feed" class="stat-card-link">Explorar <i class="bi bi-arrow-right ms-1"></i></a>
+                    </div>
                 </div>
             </div>
-        </div>
+
+            <div class="col-md-6">
+                <div class="dashboard-stat-card card-violet-tint">
+                    <div class="stat-card-header">
+                        <div class="stat-icon-wrapper">
+                            <i class="bi bi-person-lines-fill"></i>
+                        </div>
+                    </div>
+                    <div class="stat-card-body">
+                        <h3>Gerenciar Currículo</h3>
+                        <p>Atualize suas habilidades, experiências e portfólios no seu perfil profissional.</p>
+                        <a href="profile" class="stat-card-link">Editar Perfil <i class="bi bi-arrow-right ms-1"></i></a>
+                    </div>
+                </div>
+            </div>
+        }
     </div>
 
     <!-- Info Section -->
@@ -92,6 +128,24 @@
         </p>
     </div>
 </div>
+
+@code {
+    private bool isCompany = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        if (user.Identity is not null && user.Identity.IsAuthenticated)
+        {
+            var role = user.FindFirst("role")?.Value ?? user.FindFirst(ClaimTypes.Role)?.Value;
+            if (string.Equals(role, "Company", StringComparison.OrdinalIgnoreCase))
+            {
+                isCompany = true;
+            }
+        }
+    }
+}
 
 <style>
 /* Dashboard Styles */

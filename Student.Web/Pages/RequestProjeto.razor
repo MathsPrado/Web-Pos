@@ -9,56 +9,352 @@
 @inject NavigationManager uriHelper;
 @attribute [Authorize]
 
-<div class="container">
-    <div class="row justify-content-center">
-        <h3>Publique agora seu projeto</h3>
-    </div>
-</div>
-<EditForm Model="@solicitacaoProjeto" OnValidSubmit="@HandleValidSubmit">
-    <DataAnnotationsValidator />
-    <ValidationSummary />
-    <div class="form-row">
-        <div class="form-group col-md-6">
-            <label for="inputEmail4">Título</label>
-            <input type="text" class="form-control" @bind-value="solicitacaoProjeto.Titulo" id="nameProject" placeholder="Titulo" />
+<div class="request-project-wrapper">
+    <div class="container container-custom py-5">
+        <!-- Back Button -->
+        <div class="mb-4">
+            <button class="btn btn-back d-flex align-items-center gap-2" @onclick="GoBackToProfile">
+                <i class="bi bi-arrow-left"></i> Voltar ao Perfil
+            </button>
         </div>
-    </div>
-    <div class="form-row">
-        <div class="form-group col-md-6">
-            <label for="startDate">Início</label>
-            <input @bind="dateStart" id="startDate" class="form-control" />
-            <div class="custom-control custom-radio">
-                <br />
-                @*<input type="radio" id="customRadio2" name="rdInicio" class="custom-control-input">*@
-                @*<label class="custom-control-label" for="customRadio2">Em consulta</label>*@
+
+        <div class="request-project-card animate-fade-in">
+            <!-- Header Card Section -->
+            <div class="card-header-banner">
+                <div class="header-overlay"></div>
+                <div class="header-content">
+                    <div class="icon-circle">
+                        <i class="bi bi-briefcase-fill"></i>
+                    </div>
+                    <div class="header-text">
+                        <h2 class="title">Nova Solicitação de Projeto</h2>
+                        <p class="subtitle">Publique os detalhes do seu projeto de desenvolvimento para receber propostas de estudantes e freelancers qualificados.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Form Content -->
+            <div class="card-body-content">
+                <EditForm Model="@solicitacaoProjeto" OnValidSubmit="@HandleValidSubmit">
+                    <DataAnnotationsValidator />
+                    <ValidationSummary class="alert alert-danger-custom" />
+
+                    <div class="row">
+                        <!-- Título do Projeto -->
+                        <div class="col-12 mb-4">
+                            <div class="form-input-group">
+                                <label for="nameProject" class="form-label-custom">Título do Projeto <span class="required">*</span></label>
+                                <div class="input-icon-wrapper">
+                                    <i class="bi bi-file-earmark-text input-icon"></i>
+                                    <input type="text" class="form-control-custom" @bind-value="solicitacaoProjeto.Titulo" id="nameProject" placeholder="Ex: App de Delivery em Flutter" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Data de Início e Data de Fim -->
+                        <div class="col-md-6 mb-4">
+                            <div class="form-input-group">
+                                <label for="startDate" class="form-label-custom">Data de Início Prevista <span class="required">*</span></label>
+                                <div class="input-icon-wrapper">
+                                    <i class="bi bi-calendar-check input-icon"></i>
+                                    <input type="date" class="form-control-custom" @bind="dateStart" id="startDate" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 mb-4">
+                            <div class="form-input-group">
+                                <label for="FimDate" class="form-label-custom">Data Limite de Inscrição <span class="required">*</span></label>
+                                <div class="input-icon-wrapper">
+                                    <i class="bi bi-calendar-event input-icon"></i>
+                                    <input type="date" class="form-control-custom" @bind="dateEnd" id="FimDate" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Orçamento e Localidade -->
+                        <div class="col-md-6 mb-4">
+                            <div class="form-input-group">
+                                <label for="budget" class="form-label-custom">Orçamento Planejado <span class="required">*</span></label>
+                                <div class="input-icon-wrapper">
+                                    <i class="bi bi-currency-dollar input-icon"></i>
+                                    <input type="text" class="form-control-custom" @bind-value="solicitacaoProjeto.Orçamento" id="budget" placeholder="Ex: R$ 5.000,00" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 mb-4">
+                            <div class="form-input-group">
+                                <label for="location" class="form-label-custom">Localidade / Modelo <span class="required">*</span></label>
+                                <div class="input-icon-wrapper">
+                                    <i class="bi bi-geo-alt input-icon"></i>
+                                    <input type="text" class="form-control-custom" @bind-value="solicitacaoProjeto.Local" id="location" placeholder="Ex: Remoto ou Presencial (São Paulo)" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Descrição Completa -->
+                        <div class="col-12 mb-4">
+                            <div class="form-input-group">
+                                <label for="description" class="form-label-custom">Descrição Detalhada do Projeto <span class="required">*</span></label>
+                                <textarea @bind-value="solicitacaoProjeto.Descricao" @bind-value:event="oninput" class="form-control-custom text-area-custom" id="description" rows="7" placeholder="Descreva os objetivos, stacks recomendadas e o que é esperado do freelancer..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Submit Actions Group -->
+                    <div class="d-flex justify-content-end gap-3 mt-4 pt-3 border-top-custom">
+                        <button type="button" class="btn btn-cancel-custom" @onclick="GoBackToProfile">Cancelar</button>
+                        <button type="submit" class="btn btn-submit-custom">
+                            <i class="bi bi-send-fill me-1"></i> Publicar Projeto
+                        </button>
+                    </div>
+                </EditForm>
             </div>
         </div>
-        <div class="form-group col-md-6">
-            <label for="FimDate">Fim</label>
-            <input @bind="dateEnd" id="FimDate" class="form-control" type="date" />
-        </div>
     </div>
-    <div class="form-row">
-        <div class="form-group col-md-6">
-            <label for="FimDate">Orçamento</label>
-            <input type="text" class="form-control" @bind-value="solicitacaoProjeto.Orçamento" for="inputEmail4">Orçamento</input>
-        </div>
-        <div class="form-group col-md-6">
-            <label for="FimDate">Local</label>
-            <input type="text" class="form-control" @bind-value="solicitacaoProjeto.Local" placeholder="Local" for="inputEmail4">Local</input>
-        </div>
-    </div>
+</div>
 
-    <div class="form-row">
-        <div class="form-group col-md-9">
-            <label for="exampleFormControlTextarea1" class="form-label">Descrição</label>
-            <textarea @bind-value="solicitacaoProjeto.Descricao" @bind-value:event="oninput" class="form-control" id="exampleFormControlTextarea1" rows="10"></textarea>
-        </div>
-    </div>
-    <div class="col text-center">
-        <button type="submit" class="btn btn-primary" >Salvar</button>@*@onclick="Salvar"*@
-    </div>
-</EditForm>
+<style>
+    .request-project-wrapper {
+        background-color: #f7fafc;
+        min-height: 100vh;
+        width: 100%;
+        display: flex;
+        align-items: flex-start;
+    }
+
+    .container-custom {
+        max-width: 1140px !important;
+    }
+
+    /* Back Button Styling */
+    .btn-back {
+        background: none;
+        border: none;
+        color: #718096;
+        font-weight: 600;
+        font-size: 0.95rem;
+        cursor: pointer;
+        transition: color 0.2s, transform 0.2s;
+        padding: 0;
+    }
+
+    .btn-back:hover {
+        color: #6c5ce7;
+        transform: translateX(-4px);
+    }
+
+    /* Card Wrapper */
+    .request-project-card {
+        background: #ffffff;
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+        border: 1px solid rgba(0, 0, 0, 0.05);
+        overflow: hidden;
+        position: relative;
+    }
+
+    /* Header Banner with Premium Gradient */
+    .card-header-banner {
+        position: relative;
+        background: linear-gradient(135deg, #6c5ce7 0%, #483d8b 100%);
+        padding: 2.5rem 2rem;
+        color: #ffffff;
+        overflow: hidden;
+    }
+
+    .header-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-image: radial-gradient(circle at 10% 20%, rgba(255,255,255,0.05) 0%, transparent 40%);
+        z-index: 1;
+    }
+
+    .header-content {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+    }
+
+    .icon-circle {
+        width: 60px;
+        height: 60px;
+        background: rgba(255, 255, 255, 0.15);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.75rem;
+        color: #ffffff;
+        backdrop-filter: blur(4px);
+    }
+
+    .header-text .title {
+        font-size: 1.5rem;
+        font-weight: 800;
+        margin: 0 0 0.25rem 0;
+        letter-spacing: -0.5px;
+    }
+
+    .header-text .subtitle {
+        font-size: 0.9rem;
+        margin: 0;
+        color: rgba(255, 255, 255, 0.85);
+        line-height: 1.4;
+    }
+
+    /* Card Body Content */
+    .card-body-content {
+        padding: 2.5rem 2rem;
+    }
+
+    /* Custom Form Layout & Inputs */
+    .form-input-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .form-label-custom {
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: #4a5568;
+        margin: 0;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .required {
+        color: #e53e3e;
+    }
+
+    .input-icon-wrapper {
+        position: relative;
+        display: flex;
+        align-items: center;
+    }
+
+    .input-icon {
+        position: absolute;
+        left: 1rem;
+        color: #a0aec0;
+        font-size: 1.1rem;
+        pointer-events: none;
+    }
+
+    .form-control-custom {
+        width: 100%;
+        background-color: #f7fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 0.75rem 1rem 0.75rem 2.7rem;
+        font-size: 0.95rem;
+        color: #2d3748;
+        font-weight: 500;
+        transition: all 0.25s ease-in-out;
+    }
+
+    .form-control-custom::placeholder {
+        color: #a0aec0;
+    }
+
+    .form-control-custom:focus {
+        background-color: #ffffff;
+        border-color: #6c5ce7;
+        box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.15);
+        outline: none;
+    }
+
+    .text-area-custom {
+        padding: 0.75rem 1rem;
+        min-height: 150px;
+        resize: vertical;
+    }
+
+    /* Validation Errors */
+    .alert-danger-custom {
+        background-color: #fff5f5;
+        border: 1px solid #fed7d7;
+        color: #c53030;
+        border-radius: 8px;
+        padding: 1rem;
+        font-size: 0.9rem;
+        margin-bottom: 2rem;
+    }
+
+    .alert-danger-custom ul {
+        margin: 0;
+        padding-left: 1.25rem;
+    }
+
+    /* Actions Panel */
+    .border-top-custom {
+        border-top: 1px solid #edf2f7;
+    }
+
+    .btn-submit-custom {
+        background-color: #6c5ce7;
+        color: #ffffff;
+        font-weight: 700;
+        font-size: 0.95rem;
+        border: none;
+        border-radius: 8px;
+        padding: 0.75rem 1.5rem;
+        cursor: pointer;
+        transition: background-color 0.2s, transform 0.2s;
+        box-shadow: 0 4px 12px rgba(108, 92, 231, 0.2);
+    }
+
+    .btn-submit-custom:hover {
+        background-color: #5b4cc4;
+        transform: translateY(-1px);
+    }
+
+    .btn-submit-custom:active {
+        transform: translateY(0);
+    }
+
+    .btn-cancel-custom {
+        background-color: #ffffff;
+        color: #718096;
+        font-weight: 600;
+        font-size: 0.95rem;
+        border: 1px solid #d2d6dc;
+        border-radius: 8px;
+        padding: 0.75rem 1.5rem;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .btn-cancel-custom:hover {
+        background-color: #f7fafc;
+        border-color: #cbd5e0;
+        color: #2d3748;
+    }
+
+    /* Fade-in Animation */
+    .animate-fade-in {
+        animation: fadeIn 0.4s ease-out;
+    }
+
+    @@keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(15px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+
 @code {
     SolicitacaoProjeto solicitacaoProjeto = new SolicitacaoProjeto();
 
@@ -68,8 +364,6 @@
     public DateTime dateStart { get; set; }
     public DateTime dateEnd { get; set; }
 
-    //SolicitacaoProjeto solicitacaoProjeto = new SolicitacaoProjeto();
-
     protected async override void OnInitialized()
     {
         var date = DateTime.Now;
@@ -78,14 +372,17 @@
         HandleHeset();
     }
 
-    //private async void Salvar()
-    //{
-
-    //}
+    private void GoBackToProfile()
+    {
+        uriHelper.NavigateTo("company-profile");
+    }
 
     private async Task HandleValidSubmit()
     {
-        if(solicitacaoProjeto.Descricao == "" || solicitacaoProjeto.Orçamento == "" || solicitacaoProjeto.Local == "" || solicitacaoProjeto.Titulo == "")
+        if (string.IsNullOrEmpty(solicitacaoProjeto.Descricao) || 
+            string.IsNullOrEmpty(solicitacaoProjeto.Orçamento) || 
+            string.IsNullOrEmpty(solicitacaoProjeto.Local) || 
+            string.IsNullOrEmpty(solicitacaoProjeto.Titulo))
         {
             await JsRuntime.InvokeVoidAsync("alert", "Preencher todos os campos"); // Alert
             return;
@@ -120,14 +417,13 @@
         solicitacaoProjeto.DataInicio = dateStart;
         var result = await solicitacaoProjectServer.Create(solicitacaoProjeto);
         if(result == "OK"){
-            await JsRuntime.InvokeVoidAsync("alert", "Salvo com sucesso!"); // Alert
-                               uriHelper.NavigateTo(uriHelper.Uri, forceLoad: true);  
+            await JsRuntime.InvokeVoidAsync("alert", "Projeto criado com sucesso!"); // Alert
+            uriHelper.NavigateTo("company-profile");  
         }
         else
-            await JsRuntime.InvokeVoidAsync("alert", "Erro:"+result); // Alert
+            await JsRuntime.InvokeVoidAsync("alert", "Erro: " + result); // Alert
 
         resetValues();
-        // Process the valid form
     }
 
     private void resetValues()

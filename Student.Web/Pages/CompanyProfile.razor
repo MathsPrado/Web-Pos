@@ -30,7 +30,7 @@
                     <span class="badge badge-industry"><i class="bi bi-tag-fill me-1"></i> @company.Segmento</span>
                     <span class="badge badge-email"><i class="bi bi-envelope-fill me-1"></i> @company.Email</span>
                 </div>
-                <div class="ms-auto pe-3">
+                <div class="profile-edit-btn-container">
                     <button class="btn btn-premium-edit" @onclick="ToggleEditMode">
                         @if (isEditing)
                         {
@@ -211,7 +211,7 @@
 .profile-avatar-row {
     display: flex;
     align-items: center;
-    padding: 1.5rem 2rem;
+    padding: 1.5rem 0.75rem 1.5rem 2rem;
     margin-top: -50px;
     position: relative;
     z-index: 2;
@@ -260,6 +260,13 @@
     font-size: 0.85rem;
     font-weight: 600;
     border-radius: 30px;
+}
+
+.profile-edit-btn-container {
+    margin-left: auto;
+    padding-right: 0.5rem;
+    align-self: flex-end;
+    margin-bottom: 0.25rem;
 }
 
 .btn-premium-edit {

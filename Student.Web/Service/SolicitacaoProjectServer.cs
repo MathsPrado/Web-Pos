@@ -33,9 +33,18 @@ namespace Student.Web.Service
             }
         }
 
-        public SolicitacaoProjeto Delete(int id)
+        public async Task<string> Delete(int id)
         {
-            throw new System.NotImplementedException();
+            try
+            {
+                HttpClient client = new HttpClient();
+                var a = await client.DeleteAsync($"{site}/{id}");
+                return a.StatusCode.ToString();
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
         }
 
         public async Task<SolicitacaoProjeto> FindById(int id)

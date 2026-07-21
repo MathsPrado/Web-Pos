@@ -6,6 +6,8 @@
 @inject PerfilEmpresaService EmpresaService
 @inject AuthenticationStateProvider AuthStateProvider
 @inject NavigationManager NavManager
+@inject SolicitacaoProjectServer solicitacaoProjectServer
+@inject Microsoft.JSInterop.IJSRuntime JsRuntime
 
 <div class="company-profile-container">
     @if (company == null)
@@ -132,7 +134,7 @@
                             </button>
                         </div>
 
-                        @if (company.ProjetosAbertos == null || company.ProjetosAbertos.Count == 0)
+                        @if (company.ProjetosAbertos == null || !company.ProjetosAbertos.Any(p => p.DelFlag == 0))
                         {
                             <div class="empty-projects-state">
                                 <i class="bi bi-clipboard-x projects-empty-icon"></i>
@@ -145,12 +147,27 @@
                         else
                         {
                             <div class="projects-list">
-                                @foreach (var proj in company.ProjetosAbertos)
+                                @foreach (var proj in company.ProjetosAbertos.Where(p => p.DelFlag == 0))
                                 {
                                     <div class="project-item-card">
                                         <div class="project-item-header">
                                             <h5 class="project-item-title">@proj.Titulo</h5>
-                                            <span class="project-budget">@proj.Orçamento</span>
+                                            <div class="d-flex align-items-center gap-2">
+                                                <span class="project-budget me-2">@proj.Orçamento</span>
+                                                <div class="position-relative">
+                                                    <button class="btn btn-link text-secondary p-0 dropdown-toggle-custom" @onclick="() => ToggleDropdown(proj.Id)" style="border: none; box-shadow: none; background: none;">
+                                                        <i class="bi bi-three-dots-vertical" style="font-size: 1.25rem; color: #718096;"></i>
+                                                    </button>
+                                                    @if (openDropdownProjectId == proj.Id)
+                                                    {
+                                                        <div class="custom-dropdown-menu" style="position: absolute; right: 0; top: 100%; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); z-index: 10; min-width: 120px; padding: 0.5rem 0;">
+                                                            <button class="dropdown-item-custom text-danger d-flex align-items-center gap-2" @onclick="() => ConfirmDeleteProject(proj.Id)" style="background: none; border: none; width: 100%; text-align: left; padding: 0.5rem 1rem; font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: background 0.2s;">
+                                                                <i class="bi bi-trash-fill"></i> Excluir
+                                                            </button>
+                                                        </div>
+                                                    }
+                                                </div>
+                                            </div>
                                         </div>
                                         <p class="project-item-desc">@proj.Descricao</p>
                                         <div class="project-item-meta">
@@ -456,10 +473,11 @@
     line-height: 1.5;
 }
 
-.project-item-meta {
-    font-size: 0.8rem;
-    color: #a0aec0;
-    font-weight: 500;
+.dropdown-item-custom:hover {
+    background-color: #fff5f5 !important;
+}
+.dropdown-toggle-custom:hover {
+    color: #4a5568 !important;
 }
 </style>
 
@@ -501,6 +519,7 @@
                 if (!string.IsNullOrEmpty(email))
                 {
                     company = await EmpresaService.GetCompanyByEmailAsync(email);
+                    openDropdownProjectId = null;
                     if (company != null)
                     {
                         editModel = new PerfilEmpresa
@@ -557,5 +576,45 @@
     private void NavigateToNewProject()
     {
         NavManager.NavigateTo("RequestProjeto");
+    }
+
+    private int? openDropdownProjectId;
+
+    private void ToggleDropdown(int projectId)
+    {
+        if (openDropdownProjectId == projectId)
+        {
+            openDropdownProjectId = null;
+        }
+        else
+        {
+            openDropdownProjectId = projectId;
+        }
+    }
+
+    private async Task ConfirmDeleteProject(int projectId)
+    {
+        bool confirmed = await JsRuntime.InvokeAsync<bool>("confirm", "Tem certeza que deseja excluir esta solicitação de projeto?");
+        if (confirmed)
+        {
+            openDropdownProjectId = null;
+            try
+            {
+                var result = await solicitacaoProjectServer.Delete(projectId);
+                if (result == "OK" || result == "NoContent" || result == "200" || result == "204")
+                {
+                    await JsRuntime.InvokeVoidAsync("alert", "Projeto excluído com sucesso!");
+                    await LoadCompanyProfile(); // Refresh list
+                }
+                else
+                {
+                    await JsRuntime.InvokeVoidAsync("alert", $"Erro ao excluir o projeto: {result}");
+                }
+            }
+            catch (Exception ex)
+            {
+                await JsRuntime.InvokeVoidAsync("alert", $"Erro: {ex.Message}");
+            }
+        }
     }
 }

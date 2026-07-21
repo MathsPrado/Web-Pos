@@ -28,7 +28,8 @@ graph TD
 ### 🏢 Perfil Comercial de Empresa
 - **Cadastro Multi-Role**: Ao criar uma nova conta na plataforma, você pode selecionar se deseja se registrar como **Estudante (Freelancer)** ou **Empresa Parceira**.
 - **Painel de Perfil**: Visualização premium das métricas de perfil (segmento/setor, descrição da empresa, site oficial em link hipertext).
-- **Lista de Projetos Ativos**: Visualização em tempo real de todas as solicitações de projetos criadas por este perfil corporativo.
+- **Lista de Projetos Ativos (Filtrada)**: Visualização em tempo real das solicitações de projetos ativas (`DelFlag == 0`) criadas por este perfil corporativo.
+- **Exclusão de Projetos (Soft Delete)**: As solicitações de projetos podem ser arquivadas diretamente no perfil clicando no menu de opções (ícone de três pontinhos verticais). A exclusão é lógica via soft delete (`DelFlag = 1`), ocultando o projeto instantaneamente.
 - **Edição Inline**: Edição rápida por meio de cards interativos integrados diretamente à página do perfil.
 
 ### 🎓 Perfil de Estudante / Freelancer

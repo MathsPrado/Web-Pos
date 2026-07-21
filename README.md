@@ -23,23 +23,12 @@ graph TD
 
 ---
 
-## ⚡ Principais Funcionalidades
+## ⚡ Fluxo de Arquitetura da Solução
 
-### 🏢 Perfil Comercial de Empresa
-- **Cadastro Multi-Role**: Ao criar uma nova conta na plataforma, você pode selecionar se deseja se registrar como **Estudante (Freelancer)** ou **Empresa Parceira**.
-- **Painel de Perfil**: Visualização premium das métricas de perfil (segmento/setor, descrição da empresa, site oficial em link hipertext).
-- **Lista de Projetos Ativos (Filtrada)**: Visualização em tempo real das solicitações de projetos ativas (`DelFlag == 0`) criadas por este perfil corporativo.
-- **Exclusão de Projetos (Soft Delete)**: As solicitações de projetos podem ser arquivadas diretamente no perfil clicando no menu de opções (ícone de três pontinhos verticais). A exclusão é lógica via soft delete (`DelFlag = 1`), ocultando o projeto instantaneamente.
-- **Edição Inline**: Edição rápida por meio de cards interativos integrados diretamente à página do perfil.
-
-### 🎓 Perfil de Estudante / Freelancer
-- **Habilidades & Competências**: Vinculação visual de Tags dinâmicas de Skills.
-- **Experiência Profissional**: Histórico de trabalhos e graduações estruturados em linha do tempo na lateral do dashboard do estudante.
-
-### 📝 Solicitação e Feed de Projetos
-- **Publicação**: Painel dinâmico `/RequestProjeto` permitindo preencher detalhes como título, descrição do projeto, orçamento planejado e localidade.
-- **Associação Automática**: A plataforma infere se o usuário autenticado é uma Empresa Parceira para persistir e vincular diretamente a solicitação de projeto ao ID correto no banco SQL Server.
-- **Feed**: Exibição estruturada com status das candidaturas de estudantes e inscrições ativas.
+A plataforma funciona em três camadas integradas:
+1. **Identidade e Acesso**: O microsserviço `MyAuth.API` emite tokens JWT. No frontend, o `CustomAuthStateProvider` gerencia dinamicamente esse token por meio do ciclo de vida dos circuitos WebSocket do Blazor Server.
+2. **Integração de Cadastro**: O usuário escolhe seu perfil (`Estudante` ou `Empresa`) no cadastro, e as permissões de acesso e navegação são resolvidas automaticamente com base nas claims.
+3. **Persistência e Soft Delete**: As solicitações de projetos criadas por empresas são vinculadas automaticamente à ID corporativa logada e utilizam Soft Delete (`DelFlag`). Projetos marcados com `DelFlag = 1` são ocultados do feed de forma lógica no banco de dados.
 
 ---
 

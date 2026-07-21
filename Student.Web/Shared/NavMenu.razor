@@ -64,6 +64,13 @@
                     </a>
                 </li>
             </ul>
+            <AuthorizeView>
+                <Authorized>
+                    <span class="navbar-text me-3 d-flex align-items-center" style="font-weight: 500; font-size: 0.95rem; color: #a29bfe !important;">
+                        <i class="bi bi-person-badge-fill me-1" style="font-size: 1.1rem; color: #a29bfe;"></i> @(context.User.Identity?.Name ?? context.User.FindFirst("unique_name")?.Value)
+                    </span>
+                </Authorized>
+            </AuthorizeView>
         </div>
     </div>
 </nav>

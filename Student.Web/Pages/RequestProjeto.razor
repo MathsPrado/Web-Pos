@@ -97,7 +97,8 @@
 
         if (string.Equals(role, "Company", StringComparison.OrdinalIgnoreCase))
         {
-            var email = user.FindFirst(ClaimTypes.Email)?.Value 
+            var email = user.FindFirst("unique_name")?.Value
+                        ?? user.FindFirst(ClaimTypes.Email)?.Value 
                         ?? user.FindFirst(ClaimTypes.Name)?.Value;
             if (!string.IsNullOrEmpty(email))
             {
@@ -107,6 +108,11 @@
                     solicitacaoProjeto.PerfilEmpresaId = company.Id;
                 }
             }
+        }
+
+        if (solicitacaoProjeto.ListaConhecimentos == null)
+        {
+            solicitacaoProjeto.ListaConhecimentos = new List<string>();
         }
 
         editContext = new EditContext(solicitacaoProjeto);

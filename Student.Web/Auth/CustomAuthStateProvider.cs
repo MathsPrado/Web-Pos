@@ -47,7 +47,7 @@ public class CustomAuthStateProvider : AuthenticationStateProvider
         // Se achou, configura o usuário
         _http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-        var identity = new ClaimsIdentity(ParseClaimsFromJwt(token), "jwt");
+        var identity = new ClaimsIdentity(ParseClaimsFromJwt(token), "jwt", "unique_name", "role");
         _currentUser = new ClaimsPrincipal(identity);
 
         return Task.FromResult(new AuthenticationState(_currentUser));
@@ -56,7 +56,7 @@ public class CustomAuthStateProvider : AuthenticationStateProvider
     // Métodos NotifyUserLogin, NotifyUserLogout e ParseClaims (mantém iguais)
     public void NotifyUserLogin(string token)
     {
-        _currentUser = new ClaimsPrincipal(new ClaimsIdentity(ParseClaimsFromJwt(token), "jwt"));
+        _currentUser = new ClaimsPrincipal(new ClaimsIdentity(ParseClaimsFromJwt(token), "jwt", "unique_name", "role"));
         _http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
         var authState = Task.FromResult(new AuthenticationState(_currentUser));
         NotifyAuthenticationStateChanged(authState);

@@ -494,7 +494,8 @@
 
             if (user.Identity is not null && user.Identity.IsAuthenticated)
             {
-                var email = user.FindFirst(ClaimTypes.Email)?.Value 
+                var email = user.FindFirst("unique_name")?.Value
+                            ?? user.FindFirst(ClaimTypes.Email)?.Value 
                             ?? user.FindFirst(ClaimTypes.Name)?.Value;
 
                 if (!string.IsNullOrEmpty(email))

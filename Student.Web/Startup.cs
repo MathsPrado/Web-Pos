@@ -1,4 +1,4 @@
-using Blazored.LocalStorage; // <--- 1. IMPORTANTE: Adicione este using
+Ôªøusing Blazored.LocalStorage; // <--- 1. IMPORTANTE: Adicione este using
 using MeuProjetoBlazor.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components;
@@ -13,7 +13,7 @@ using Student.Web.Service;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http; // Necess·rio para configurar o HttpClient
+using System.Net.Http; // Necess√°rio para configurar o HttpClient
 using System.Threading.Tasks;
 
 namespace Student.Web
@@ -32,24 +32,25 @@ namespace Student.Web
             services.AddRazorPages();
             services.AddServerSideBlazor();
 
-            // ServiÁos existentes
+            // Servi√ßos existentes
             services.AddSingleton<WeatherForecastService>();
             services.AddSingleton<SolicitacaoProjectServer>();
             services.AddSingleton<PropostaSolicitacaoProjetoServer>();
             services.AddSingleton<PerfilUserService>();
+            services.AddSingleton<PerfilEmpresaService>();
 
             services.AddHttpContextAccessor();
 
-            // --- 2. CORRE«√O DO ERRO DE LOCAL STORAGE ---
+            // --- 2. CORRE√á√ÉO DO ERRO DE LOCAL STORAGE ---
             // Isso resolve o erro: "Unable to resolve service for type Blazored.LocalStorage"
             services.AddBlazoredLocalStorage();
 
-            // --- 3. CONFIGURA«√O DA AUTENTICA«√O ---
+            // --- 3. CONFIGURA√á√ÉO DA AUTENTICA√á√ÉO ---
             services.AddScoped<AuthenticationStateProvider, CustomAuthStateProvider>();
 
-            // --- 4. CONFIGURA«√O DO AUTH SERVICE COM ENDERE«O DA API ---
-            // Em vez de apenas AddScoped, usamos AddHttpClient para j· definir a URL base da API
-            // ATEN«√O: Verifique se a porta 7152 È a correta da sua API rodando
+            // --- 4. CONFIGURA√á√ÉO DO AUTH SERVICE COM ENDERE√áO DA API ---
+            // Em vez de apenas AddScoped, usamos AddHttpClient para j√° definir a URL base da API
+            // ATEN√á√ÉO: Verifique se a porta 7152 √© a correta da sua API rodando
             services.AddHttpClient<IAuthService, AuthService>(client =>
             {
                 client.BaseAddress = new Uri("https://localhost:7152/");

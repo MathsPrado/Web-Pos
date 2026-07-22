@@ -13,7 +13,13 @@
         <p class="feed-subtitle text-muted">Acompanhe as propostas de orçamento e prazos que você enviou para projetos da plataforma.</p>
     </div>
 
-    @if (propostaSolicitacaoProjeto == null)
+    @if (!string.IsNullOrEmpty(errorMessage))
+    {
+        <div class="alert alert-danger">
+            Error: @errorMessage
+        </div>
+    }
+    else if (propostaSolicitacaoProjeto == null)
     {
         <div class="d-flex justify-content-center py-5">
             <div class="spinner-border text-primary" role="status">
@@ -58,6 +64,10 @@
                                 <div class="info-row d-flex align-items-center mb-2">
                                     <span class="info-icon text-primary me-2"><i class="bi bi-clock-history"></i></span>
                                     <span class="info-text">Tempo de Entrega: <strong class="text-dark">@proposta.TempoEntrega dias</strong></span>
+                                </div>
+                                <div class="info-row d-flex align-items-center mb-2">
+                                    <span class="info-icon text-warning me-2"><i class="bi bi-calendar-event"></i></span>
+                                    <span class="info-text">Data da Inscrição: <strong class="text-dark">@proposta.DataCriacao.ToString("dd/MM/yyyy")</strong></span>
                                 </div>
                                 <div class="info-row d-flex align-items-center">
                                     <span class="info-icon text-secondary me-2"><i class="bi bi-person-fill"></i></span>
@@ -205,14 +215,20 @@
 
 @code {
     private IEnumerable<PropostaSolicitacaoProjeto> propostaSolicitacaoProjeto;
+    private string errorMessage;
 
     protected override async Task OnInitializedAsync()
     {
-        
-        var result = await propostaSolicitacaoProjetoServer.GetAll();
+        try
+        {
+            var result = await propostaSolicitacaoProjetoServer.GetAll();
 
-        if (result is not null)
-            propostaSolicitacaoProjeto = result;
-
+            if (result is not null)
+                propostaSolicitacaoProjeto = result;
+        }
+        catch (Exception ex)
+        {
+            errorMessage = ex.Message;
+        }
     }
 }

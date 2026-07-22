@@ -1,4 +1,6 @@
-﻿namespace Student.Web.Pages
+﻿using System;
+
+namespace Student.Web.Pages
 {
     public class PropostaSolicitacaoProjeto
     {
@@ -9,5 +11,6 @@
         public int IdPropostaSolucao { get; set; }
 
         public int IdUsuario { get; set; }
+        public DateTime DataCriacao { get; set; }
     }
 }

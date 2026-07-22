@@ -7,6 +7,7 @@
 @inject SolicitacaoProjectServer solicitacaoProjectServer;
 @inject PropostaSolicitacaoProjetoServer propostaSolicitacaoProjetoServer;
 @inject IJSRuntime JsRuntime
+@inject NavigationManager NavManager
 
 <EditForm Model="@propostaSolicitacaoProjeto" OnValidSubmit="@HandleValidSubmit">
     <DataAnnotationsValidator />
@@ -172,8 +173,13 @@
 
 
         if (result == "OK")
-            await JsRuntime.InvokeAsync<string>("Alert", "Salvo com no sucesso!"); // Alert
+        {
+            await JsRuntime.InvokeVoidAsync("alert", "Proposta enviada com sucesso!");
+            NavManager.NavigateTo("Feed");
+        }
         else
-            await JsRuntime.InvokeAsync<string>("Alert", "Error:" + result);; // Alert
+        {
+            await JsRuntime.InvokeVoidAsync("alert", "Erro: " + result);
+        }
     }
 }

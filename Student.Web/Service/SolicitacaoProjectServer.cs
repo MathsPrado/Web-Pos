@@ -77,6 +77,20 @@ namespace Student.Web.Service
             }
         }
 
+        public async Task<IEnumerable<SolicitacaoProjeto>> GetProjetosByUsuario(int idUsuario)
+        {
+            try
+            {
+                HttpClient client = new HttpClient();
+                var a = await client.GetFromJsonAsync<IEnumerable<SolicitacaoProjeto>>($"{site}/usuario/{idUsuario}");
+                return a;
+            }
+            catch (Exception)
+            {
+                return new List<SolicitacaoProjeto>();
+            }
+        }
+
         public SolicitacaoProjeto Update(SolicitacaoProjeto value)
         {
             throw new System.NotImplementedException();

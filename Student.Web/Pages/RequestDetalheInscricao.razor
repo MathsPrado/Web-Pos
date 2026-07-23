@@ -69,13 +69,17 @@
                                     <span class="info-icon text-warning me-2"><i class="bi bi-calendar-event"></i></span>
                                     <span class="info-text">Data da Inscrição: <strong class="text-dark">@proposta.DataCriacao.ToString("dd/MM/yyyy")</strong></span>
                                 </div>
-                                <div class="info-row d-flex align-items-center">
+                                <div class="info-row d-flex align-items-center mb-2">
                                     <span class="info-icon text-secondary me-2"><i class="bi bi-person-fill"></i></span>
                                     <span class="info-text">ID Candidato: <span class="text-secondary">#@proposta.IdUsuario</span></span>
                                 </div>
                             </div>
                             
-                            <div class="card-status-badge text-center py-2 rounded">
+                            <div class="mt-3">
+                                <button class="btn btn-outline-primary w-100" @onclick="() => openDetailsModal(proposta)">Ver Detalhes</button>
+                            </div>
+                            
+                            <div class="card-status-badge text-center py-2 rounded mt-3">
                                 <i class="bi bi-hourglass-split me-1"></i> Status: Aguardando Retorno
                             </div>
                         </div>
@@ -85,6 +89,32 @@
         }
     }
 </div>
+
+@if (activeProposta != null)
+{
+    <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Detalhes da Inscrição #@activeProposta.Id</h5>
+                    <button type="button" class="btn-close" @onclick="closeDetailsModal"></button>
+                </div>
+                <div class="modal-body">
+                    <h6>Mensagem / Proposta Adicional:</h6>
+                    <p class="text-muted" style="white-space: pre-wrap;">@activeProposta.Descircao</p>
+                    
+                    <hr />
+                    <p><strong>Orçamento: </strong> R$ @activeProposta.Orçamento</p>
+                    <p><strong>Tempo Estimado: </strong> @activeProposta.TempoEntrega dias</p>
+                    <p><strong>Data de Envio: </strong> @activeProposta.DataCriacao.ToString("dd/MM/yyyy HH:mm")</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" @onclick="closeDetailsModal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
 
 <style>
 /* Modern Inscription Designs */
@@ -216,6 +246,7 @@
 @code {
     private IEnumerable<PropostaSolicitacaoProjeto> propostaSolicitacaoProjeto;
     private string errorMessage;
+    private PropostaSolicitacaoProjeto activeProposta = null;
 
     protected override async Task OnInitializedAsync()
     {
@@ -230,5 +261,15 @@
         {
             errorMessage = ex.Message;
         }
+    }
+
+    private void openDetailsModal(PropostaSolicitacaoProjeto proposta)
+    {
+        activeProposta = proposta;
+    }
+
+    private void closeDetailsModal()
+    {
+        activeProposta = null;
     }
 }

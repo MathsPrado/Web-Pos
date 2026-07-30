@@ -316,7 +316,18 @@
                                 <h6>Adicionar Formação</h6>
                                 <input type="text" class="form-control form-control-sm mb-2" placeholder="Instituição ex: USP, FATEC" @bind="newFormInstituicao" />
                                 <input type="text" class="form-control form-control-sm mb-2" placeholder="Curso" @bind="newFormCurso" />
-                                <input type="text" class="form-control form-control-sm mb-2" placeholder="Período ex: 2020-2024" @bind="newFormPeriodo" />
+                                <div class="mb-2">
+                                    <label class="form-label text-muted" style="font-size: 0.8em; margin-bottom: 2px;">Data Inicial</label>
+                                    <input type="date" class="form-control form-control-sm" @bind="newFormDateInicio" />
+                                </div>
+                                <div class="mb-2">
+                                    <label class="form-label text-muted" style="font-size: 0.8em; margin-bottom: 2px;">Data Final (opcional se cursando)</label>
+                                    <input type="date" class="form-control form-control-sm" @bind="newFormDateFim" disabled="@newFormCursando" />
+                                </div>
+                                @if(!string.IsNullOrEmpty(newFormError))
+                                {
+                                    <div class="text-danger mb-2" style="font-size: 0.8em;">@newFormError</div>
+                                }
                                 <div class="form-check mb-2">
                                     <input class="form-check-input" type="checkbox" id="checkCursandoForm" @bind="newFormCursando">
                                     <label class="form-check-label" for="checkCursandoForm">
@@ -356,8 +367,10 @@ else
     // Variáveis de nova formação
     private string newFormInstituicao = string.Empty;
     private string newFormCurso = string.Empty;
-    private string newFormPeriodo = string.Empty;
+    private DateTime? newFormDateInicio = null;
+    private DateTime? newFormDateFim = null;
     private bool newFormCursando = false;
+    private string newFormError = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
@@ -484,22 +497,48 @@ else
 
     private void AddFormacao()
     {
+        newFormError = string.Empty;
+
+        // Validação da data
+        if (newFormDateInicio.HasValue && !newFormCursando && newFormDateFim.HasValue)
+        {
+            if (newFormDateInicio.Value > newFormDateFim.Value)
+            {
+                newFormError = "A data inicial não pode ser maior que a data final.";
+                return;
+            }
+        }
+
         if (!string.IsNullOrWhiteSpace(newFormInstituicao) && !string.IsNullOrWhiteSpace(newFormCurso))
         {
             if (perfilUser.Formacoes == null)
                 perfilUser.Formacoes = new List<AcademicBackground>();
 
+            string periodo = string.Empty;
+            if (newFormDateInicio.HasValue)
+            {
+                periodo += newFormDateInicio.Value.ToString("yyyy");
+                periodo += " - ";
+                if (newFormCursando)
+                    periodo += "Atual";
+                else if (newFormDateFim.HasValue)
+                    periodo += newFormDateFim.Value.ToString("yyyy");
+                else
+                    periodo += "?";
+            }
+
             perfilUser.Formacoes.Add(new AcademicBackground {
                 Instituicao = newFormInstituicao.Trim(),
                 Curso = newFormCurso.Trim(),
-                DataInicioFim = newFormPeriodo?.Trim(),
+                DataInicioFim = periodo,
                 CursandoAtualmente = newFormCursando,
                 PerfilUserId = perfilUser.Id
             });
 
             newFormInstituicao = string.Empty;
             newFormCurso = string.Empty;
-            newFormPeriodo = string.Empty;
+            newFormDateInicio = null;
+            newFormDateFim = null;
             newFormCursando = false;
         }
     }

@@ -8,12 +8,26 @@
 @inject AuthenticationStateProvider AuthStateProvider
 @inject NavigationManager NavigationManager
 @inject SolicitacaoProjectServer projectService
+
 @if (perfilUser != null)
 {
 <h1>Profile</h1>
 <link href="css/Profile.css" rel="stylesheet" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/MaterialDesign-Webfont/7.2.96Every Marketing Plan Needs/css/materialdesignicons.min.css" integrity="sha512-LX0YV/MWBEn2dwXCYgQHrpa9HJkwB+S+bnBpifSOTO1No27TqNMKYoAn6ff2FBh03THAzAiiCwQ+aPX+/Qt/Ow==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/MaterialDesign-Webfont/7.2.96/css/materialdesignicons.min.css" integrity="sha512-LX0YV/MWBEn2dwXCYgQHrpa9HJkwB+S+bnBpifSOTO1No27TqNMKYoAn6ff2FBh03THAzAiiCwQ+aPX+/Qt/Ow==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <div class="container">
+    <div class="row mb-3">
+        <div class="col-12 text-end">
+            @if (isEditing)
+            {
+                <button class="btn btn-success me-2" @onclick="SaveProfile">Salvar Alterações</button>
+                <button class="btn btn-secondary" @onclick="ToggleEdit">Cancelar</button>
+            }
+            else
+            {
+                <button class="btn btn-primary" @onclick="ToggleEdit">Editar Perfil</button>
+            }
+        </div>
+    </div>
     <div class="row">
         <div class="col-xl-8">
             <div class="card">
@@ -21,8 +35,25 @@
                     <div class="row align-items-center">
                         <div class="col-md-3">
                             <div class="text-center border-end">
-                                <img src="https://bootdey.com/img/Content/avatar/avatar1.png" class="img-fluid avatar-xxl rounded-circle" alt="">
+                                @if(string.IsNullOrEmpty(perfilUser.FotoBase64))
+                                {
+                                    <img src="https://bootdey.com/img/Content/avatar/avatar1.png" class="img-fluid avatar-xxl rounded-circle mb-2" alt="">
+                                }
+                                else
+                                {
+                                    <img src="data:image/jpeg;base64,@perfilUser.FotoBase64" class="img-fluid avatar-xxl rounded-circle mb-2" style="width: 150px; height: 150px; object-fit: cover;" alt="">
+                                }
+                                
+                                @if(isEditing)
+                                {
+                                    <InputFile OnChange="HandleFileSelected" accept="image/*" class="form-control form-control-sm mb-2" />
+                                    <input type="text" class="form-control mt-2 mb-1" @bind="perfilUser.Nome" placeholder="Nome" />
+                                    <input type="text" class="form-control mb-2" @bind="perfilUser.Sobrenome" placeholder="Sobrenome" />
+                                }
+                                else
+                                {
                                     <h4 class="text-primary font-size-20 mt-3 mb-2">@perfilUser.Nome @perfilUser.Sobrenome</h4>
+                                }
                                 <h5 class="text-muted font-size-13 mb-0">Estudante / Desenvolvedor</h5>
                             </div>
                         </div><!-- end col -->
@@ -31,33 +62,20 @@
                                 <div>
                                     <h4 class="card-title mb-2">Biography</h4>
 
-                                    @if (!string.IsNullOrEmpty(perfilUser.Biografia))
-                                        {
-                                        <p class="mb-0 text-muted">  </p>
-                                        @perfilUser.Biografia;
+                                    @if (isEditing)
+                                    {
+                                        <textarea class="form-control" rows="3" @bind="perfilUser.Biografia"></textarea>
                                     }
-                                        else
-                                        {
-                                        <p class="mb-0 text-muted"> </p>
-                                            <a>Hi I'm Jansh,has been the industry's standard
-                                            dummy text To an English person alteration text.
-                                        </a>
-                                        }
-
+                                    else if (!string.IsNullOrEmpty(perfilUser.Biografia))
+                                    {
+                                        <p class="mb-0 text-muted">@perfilUser.Biografia</p>
+                                    }
+                                    else
+                                    {
+                                        <p class="mb-0 text-muted">Ainda não há biografia definida.</p>
+                                    }
                                    
                                 </div>
-                                <div class="row my-4">
-                                    <div class="col-md-12">
-                                        <div>
-                                            <p class="text-muted mb-2 fw-medium">
-                                                    <i class="mdi mdi-email-outline me-2"></i>@perfilUser.Email
-                                            </p>
-                                            <p class="text-muted fw-medium mb-0">
-                                                <i class="mdi mdi-phone-in-talk-outline me-2"></i>@perfilUser.Telefone
-                                            </p>
-                                        </div>
-                                    </div><!-- end col -->
-                                </div><!-- end row -->
 
                                 <ul class="nav nav-tabs nav-tabs-custom border-bottom-0 mt-3 nav-justfied" role="tablist">
                                     <li class="nav-item" role="presentation">
@@ -88,7 +106,7 @@
                                 @foreach (var project in studentProjects)
                                 {
                                     <div class="col-md-6">
-                                        <div class="card mb-lg-0 mb-3">
+                                        <div class="card mb-lg-0 mb-3 border">
                                             <div class="card-body">
                                                 <div class="d-flex mb-3">
                                                     <div class="flex-grow-1 align-items-start">
@@ -120,12 +138,6 @@
                             }
                         </div><!-- end row -->
                     </div><!-- end tab pane -->
-
-
-
-
-
-
                 </div>
             </div><!-- end card -->
         </div><!-- end col -->
@@ -135,24 +147,32 @@
                 <div class="card-body">
                     <div class="pb-2">
                         <h4 class="card-title mb-3">About</h4>
-                        <p>
-                                @perfilUser.Biografia
-                        </p>
-                        <ul class="ps-3 mb-0">
-                            <li>PRINCIPAIS PONTOS</li>
-                            @* <li>To achieve this, it would be necessary to have uniform pronunciation</li> *@
-                        </ul>
-                        <!-- end ul -->
+                        @if (isEditing)
+                        {
+                            <textarea class="form-control mb-2" rows="4" @bind="perfilUser.Biografia" placeholder="Conte-nos sobre você..."></textarea>
+                        }
+                        else
+                        {
+                            <p>
+                                    @perfilUser.Biografia
+                            </p>
+                        }
                     </div>
                     <hr>
                     <div class="pt-2">
                         <h4 class="card-title mb-4">My Skill</h4>
-                        <div class="d-flex gap-2 flex-wrap">
+                        <div class="d-flex gap-2 flex-wrap mb-3">
                             @if (perfilUser.Skills != null && perfilUser.Skills.Any())
                             {
                                 @foreach (var skill in perfilUser.Skills)
                                 {
-                                    <span class="badge badge-soft-secondary p-2">@skill.Nome</span>
+                                    <span class="badge p-2 mb-2 mr-2 d-flex align-items-center" style="background-color: #d1ecf1; color: #0c5460; font-size: 0.9em; border: 1px solid #bee5eb;">
+                                        @skill.Nome
+                                        @if(isEditing)
+                                        {
+                                            <i class="mdi mdi-close ml-2" style="cursor:pointer;" @onclick="() => RemoveSkill(skill)"></i>
+                                        }
+                                    </span>
                                 }
                             }
                             else
@@ -160,6 +180,13 @@
                                 <span class="text-muted">Nenhuma habilidade cadastrada.</span>
                             }
                         </div>
+                        @if (isEditing)
+                        {
+                            <div class="input-group input-group-sm">
+                                <input type="text" class="form-control" placeholder="Nova Habilidade" @bind="newSkillName" />
+                                <button class="btn btn-outline-primary" type="button" @onclick="AddSkill">Adicionar</button>
+                            </div>
+                        }
                     </div>
                 </div><!-- end cardbody -->
             </div><!-- end card -->
@@ -171,18 +198,32 @@
                         <div class="table-responsive">
                             <table class="table table-bordered mb-0">
                                 <tbody>
-                                    <tr>
-                                        <th scope="row">Name</th>
-                                        <td>@perfilUser.Nome @perfilUser.Sobrenome</td>
-                                    </tr><!-- end tr -->
+
                                     <tr>
                                         <th scope="row">Email</th>
                                         <td>@perfilUser.Email</td>
                                     </tr><!-- end tr -->
                                     <tr>
                                         <th scope="row">Phone</th>
-                                        <td>@perfilUser.Telefone</td>
+                                        <td>
+                                            @if(isEditing) {
+                                                <input type="text" class="form-control form-control-sm" @bind="perfilUser.Telefone" />
+                                            } else {
+                                                @perfilUser.Telefone
+                                            }
+                                        </td>
                                     </tr><!-- end tr -->
+                                    <tr>
+                                        <th scope="row">Cidade</th>
+                                        <td>
+                                            @if(isEditing) {
+                                                <input type="text" class="form-control form-control-sm" @bind="perfilUser.Cidade" />
+                                            } else {
+                                                @perfilUser.Cidade
+                                            }
+                                        </td>
+                                    </tr><!-- end tr -->
+
                                 </tbody><!-- end tbody -->
                             </table><!-- end table -->
                         </div>
@@ -193,30 +234,104 @@
             <div class="card">
                 <div class="card-body">
                     <div>
-                        <h4 class="card-title mb-4">Work Experince</h4>
-                        <ul class="list-unstyled work-activity mb-0">
+                        <h4 class="card-title mb-4">Work Experience</h4>
+                        <ul class="list-unstyled work-activity mb-3">
                             @if (perfilUser.Experiences != null && perfilUser.Experiences.Any())
                             {
                                 @foreach (var exp in perfilUser.Experiences)
                                 {
                                     <li class="work-item" data-date="@exp.DataInicioFim">
-                                        <h6 class="lh-base mb-0">@exp.Empresa</h6>
-                                        <p class="font-size-13 mb-2">@exp.Cargo</p>
+                                        <div class="d-flex justify-content-between">
+                                            <div>
+                                                <h6 class="lh-base mb-0">@exp.Empresa</h6>
+                                                <p class="font-size-13 mb-2">@exp.Cargo</p>
+                                            </div>
+                                            @if(isEditing)
+                                            {
+                                                <button class="btn btn-sm btn-outline-danger" @onclick="() => RemoveExperience(exp)"><i class="mdi mdi-delete"></i></button>
+                                            }
+                                        </div>
                                         <p class="mb-0">@exp.Descricao</p>
                                     </li>
                                 }
                             }
                             else
                             {
-                                <li class="text-muted">Nenhuma experi�ncia profissional cadastrada.</li>
+                                <li class="text-muted">Nenhuma experiência profissional cadastrada.</li>
                             }
                         </ul><!-- end ul -->
+                        
+                        @if(isEditing)
+                        {
+                            <div class="border p-2 mt-3 rounded">
+                                <h6>Adicionar Experiência</h6>
+                                <input type="text" class="form-control form-control-sm mb-2" placeholder="Empresa" @bind="newExpEmpresa" />
+                                <input type="text" class="form-control form-control-sm mb-2" placeholder="Cargo" @bind="newExpCargo" />
+                                <input type="text" class="form-control form-control-sm mb-2" placeholder="Período ex: 2020-2022" @bind="newExpPeriodo" />
+                                <textarea class="form-control form-control-sm mb-2" placeholder="Descrição" @bind="newExpDesc"></textarea>
+                                <button class="btn btn-sm btn-primary w-100" @onclick="AddExperience">Salvar Experiência</button>
+                            </div>
+                        }
+                    </div>
+                </div><!-- end card-body -->
+            </div><!-- end card -->
+
+            <div class="card">
+                <div class="card-body">
+                    <div>
+                        <h4 class="card-title mb-4">Formação Acadêmica</h4>
+                        <ul class="list-unstyled work-activity mb-3">
+                            @if (perfilUser.Formacoes != null && perfilUser.Formacoes.Any())
+                            {
+                                @foreach (var form in perfilUser.Formacoes)
+                                {
+                                    <li class="work-item" data-date="@form.DataInicioFim">
+                                        <div class="d-flex justify-content-between">
+                                            <div>
+                                                <h6 class="lh-base mb-0">@form.Instituicao</h6>
+                                                <p class="font-size-13 mb-1">
+                                                    @form.Curso
+                                                    @if(form.CursandoAtualmente) {
+                                                        <span class="badge bg-success ml-2" style="box-shadow: 0 0 5px rgba(40,167,69,0.5);">Estudando Atualmente</span>
+                                                    }
+                                                </p>
+                                            </div>
+                                            @if(isEditing)
+                                            {
+                                                <button class="btn btn-sm btn-outline-danger" @onclick="() => RemoveFormacao(form)"><i class="mdi mdi-delete"></i></button>
+                                            }
+                                        </div>
+                                    </li>
+                                }
+                            }
+                            else
+                            {
+                                <li class="text-muted">Nenhuma formação acadêmica cadastrada.</li>
+                            }
+                        </ul><!-- end ul -->
+                        
+                        @if(isEditing)
+                        {
+                            <div class="border p-2 mt-3 rounded">
+                                <h6>Adicionar Formação</h6>
+                                <input type="text" class="form-control form-control-sm mb-2" placeholder="Instituição ex: USP, FATEC" @bind="newFormInstituicao" />
+                                <input type="text" class="form-control form-control-sm mb-2" placeholder="Curso" @bind="newFormCurso" />
+                                <input type="text" class="form-control form-control-sm mb-2" placeholder="Período ex: 2020-2024" @bind="newFormPeriodo" />
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" id="checkCursandoForm" @bind="newFormCursando">
+                                    <label class="form-check-label" for="checkCursandoForm">
+                                        Cursando Atualmente
+                                    </label>
+                                </div>
+                                <button class="btn btn-sm btn-primary w-100" @onclick="AddFormacao">Salvar Formação</button>
+                            </div>
+                        }
                     </div>
                 </div><!-- end card-body -->
             </div><!-- end card -->
         </div><!-- end col -->
     </div>
-    </div>
+</div>
 }
 else
 {
@@ -227,15 +342,35 @@ else
 
     private PerfilUser perfilUser = new PerfilUser();
     private IEnumerable<SolicitacaoProjeto> studentProjects = new List<SolicitacaoProjeto>();
-    int a = 0;
+    
+    // Variáveis de controle de edição
+    private bool isEditing = false;
+    private string newSkillName = string.Empty;
+    
+    // Variáveis de nova experiência
+    private string newExpEmpresa = string.Empty;
+    private string newExpCargo = string.Empty;
+    private string newExpPeriodo = string.Empty;
+    private string newExpDesc = string.Empty;
+
+    // Variáveis de nova formação
+    private string newFormInstituicao = string.Empty;
+    private string newFormCurso = string.Empty;
+    private string newFormPeriodo = string.Empty;
+    private bool newFormCursando = false;
+
     protected override async Task OnInitializedAsync()
     {
         System.Console.WriteLine("[DIAG RAZOR] OnInitializedAsync started");
+        await FetchInitialData();
+    }
+
+    private async Task FetchInitialData()
+    {
         try
         {
             var authState = await AuthStateProvider.GetAuthenticationStateAsync();
             var user = authState.User;
-            System.Console.WriteLine($"[DIAG RAZOR] User Identity: {user?.Identity?.Name}, IsAuthenticated: {user?.Identity?.IsAuthenticated}");
             if (user.Identity is not null && user.Identity.IsAuthenticated)
             {
                 var role = user.FindFirst("role")?.Value ?? user.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value;
@@ -255,10 +390,6 @@ else
                     if (fetchedUser != null)
                     {
                         perfilUser = fetchedUser;
-                        System.Console.WriteLine($"[DIAG] Fetched email: {email}");
-                        System.Console.WriteLine($"[DIAG] Skills count: {perfilUser.Skills?.Count ?? -1}");
-                        System.Console.WriteLine($"[DIAG] Experiences count: {perfilUser.Experiences?.Count ?? -1}");
-                        
                         if (perfilUser.Id > 0)
                         {
                             studentProjects = await projectService.GetProjetosByUsuario(perfilUser.Id);
@@ -269,7 +400,132 @@ else
         }
         catch (Exception e)
         {
-            var testeErro = e.Message;
+            System.Console.WriteLine($"Erro no perfil: {e.Message}");
+        }
+    }
+
+    private void ToggleEdit()
+    {
+        isEditing = !isEditing;
+        if (!isEditing) 
+        {
+            // Opcional: Se cancelar, seria bom reverter as alterações buscando do servidor novamente
+            // await FetchInitialData(); - mas precisa fazer a função ser async e usar await.
+        }
+    }
+
+    private async Task SaveProfile()
+    {
+        try 
+        {
+            var updated = await perfilUserService.Update(perfilUser);
+            if (updated != null)
+            {
+                perfilUser = updated;
+                isEditing = false;
+                StateHasChanged();
+            }
+        }
+        catch(Exception e)
+        {
+            System.Console.WriteLine($"Erro a salvar perfil: {e.Message}");
+        }
+    }
+
+    private void AddSkill()
+    {
+        if (!string.IsNullOrWhiteSpace(newSkillName))
+        {
+            if (perfilUser.Skills == null)
+                perfilUser.Skills = new List<UserSkill>();
+                
+            perfilUser.Skills.Add(new UserSkill { Nome = newSkillName.Trim(), PerfilUserId = perfilUser.Id });
+            newSkillName = string.Empty;
+        }
+    }
+
+    private void RemoveSkill(UserSkill skill)
+    {
+        if (perfilUser.Skills != null && perfilUser.Skills.Contains(skill))
+        {
+            perfilUser.Skills.Remove(skill);
+        }
+    }
+
+    private void AddExperience()
+    {
+        if (!string.IsNullOrWhiteSpace(newExpEmpresa) && !string.IsNullOrWhiteSpace(newExpCargo))
+        {
+            if (perfilUser.Experiences == null)
+                perfilUser.Experiences = new List<WorkExperience>();
+
+            perfilUser.Experiences.Add(new WorkExperience {
+                Empresa = newExpEmpresa.Trim(),
+                Cargo = newExpCargo.Trim(),
+                DataInicioFim = newExpPeriodo.Trim(),
+                Descricao = newExpDesc.Trim(),
+                PerfilUserId = perfilUser.Id
+            });
+
+            newExpEmpresa = string.Empty;
+            newExpCargo = string.Empty;
+            newExpPeriodo = string.Empty;
+            newExpDesc = string.Empty;
+        }
+    }
+
+    private void RemoveExperience(WorkExperience exp)
+    {
+        if (perfilUser.Experiences != null && perfilUser.Experiences.Contains(exp))
+        {
+            perfilUser.Experiences.Remove(exp);
+        }
+    }
+
+    private void AddFormacao()
+    {
+        if (!string.IsNullOrWhiteSpace(newFormInstituicao) && !string.IsNullOrWhiteSpace(newFormCurso))
+        {
+            if (perfilUser.Formacoes == null)
+                perfilUser.Formacoes = new List<AcademicBackground>();
+
+            perfilUser.Formacoes.Add(new AcademicBackground {
+                Instituicao = newFormInstituicao.Trim(),
+                Curso = newFormCurso.Trim(),
+                DataInicioFim = newFormPeriodo?.Trim(),
+                CursandoAtualmente = newFormCursando,
+                PerfilUserId = perfilUser.Id
+            });
+
+            newFormInstituicao = string.Empty;
+            newFormCurso = string.Empty;
+            newFormPeriodo = string.Empty;
+            newFormCursando = false;
+        }
+    }
+
+    private void RemoveFormacao(AcademicBackground form)
+    {
+        if (perfilUser.Formacoes != null && perfilUser.Formacoes.Contains(form))
+        {
+            perfilUser.Formacoes.Remove(form);
+        }
+    }
+
+    private async Task HandleFileSelected(InputFileChangeEventArgs e)
+    {
+        try
+        {
+            var imageFile = await e.File.RequestImageFileAsync("image/jpeg", 400, 400);
+            using var stream = imageFile.OpenReadStream(maxAllowedSize: 5120000);
+            using var memoryStream = new System.IO.MemoryStream();
+            await stream.CopyToAsync(memoryStream);
+            perfilUser.FotoBase64 = Convert.ToBase64String(memoryStream.ToArray());
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            System.Console.WriteLine($"Erro ao processar imagem: {ex.Message}");
         }
     }
 }

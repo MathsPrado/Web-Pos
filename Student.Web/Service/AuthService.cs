@@ -29,7 +29,7 @@ public class AuthService : IAuthService
     public async Task<bool> Login(LoginRequest loginRequest)
     {
         // 1. URL FIXA DO LOGIN (Como o senhor pediu)
-        var urlLogin = "https://localhost:44303/api/Auth/login";
+        var urlLogin = "http://localhost:5180/api/Auth/login";
 
         try
         {
@@ -70,7 +70,7 @@ public class AuthService : IAuthService
 
     public async Task<bool> Register(RegisterRequest registerRequest)
     {
-        var urlRegister = "https://localhost:44303/api/Auth/register";
+        var urlRegister = "http://localhost:5180/api/Auth/register";
         var isCompany = string.Equals(registerRequest.Role, "Company", StringComparison.OrdinalIgnoreCase);
 
         var authPayload = new

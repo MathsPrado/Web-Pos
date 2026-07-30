@@ -96,9 +96,25 @@ namespace Student.Web.Service
             }
         }
 
-        public PerfilUser Update(PerfilUser value)
+        public async Task<PerfilUser> Update(PerfilUser value)
         {
-            throw new System.NotImplementedException();
+            try
+            {
+                HttpClient client = new HttpClient();
+                var response = await client.PutAsJsonAsync($"{site}/{value.Id}", value);
+                if (response.IsSuccessStatusCode)
+                {
+                    var options = new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+                    var contentStr = await response.Content.ReadAsStringAsync();
+                    return System.Text.Json.JsonSerializer.Deserialize<PerfilUser>(contentStr, options);
+                }
+                return null;
+            }
+            catch (Exception e)
+            {
+                System.Console.WriteLine($"[DIAG SERVICE] Update error: {e.Message}");
+                return null;
+            }
         }
 
     }
